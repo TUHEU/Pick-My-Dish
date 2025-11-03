@@ -1,88 +1,166 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const IngredientApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class IngredientApp extends StatelessWidget {
+  const IngredientApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ingredient Selector',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const IngredientPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-
-  final String title;
+class IngredientPage extends StatefulWidget {
+  const IngredientPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<IngredientPage> createState() => _IngredientPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _IngredientPageState extends State<IngredientPage> {
+  final TextEditingController _controller = TextEditingController();
+  final List<String> _availableIngredients = [
+    'Tomatoes',
+    'Onions',
+    'Garlic',
+    'Salt',
+    'Pepper',
+    'Olive Oil',
+    'Chicken',
+    'Rice',
+  ];
 
-  void _incrementCounter() {
+  final List<String> _selectedIngredients = [];
+
+  void _addIngredient(String ingredient) {
+    if (ingredient.trim().isEmpty) return;
     setState(() {
-      _counter++;
+      if (!_selectedIngredients.contains(ingredient)) {
+        _selectedIngredients.add(ingredient);
+      }
     });
+    _controller.clear();
+  }
+
+  void _clearAll() {
+    setState(() => _selectedIngredients.clear());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Ingredient Selector'),
+        backgroundColor: Colors.green,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Add Ingredients:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 10),
+
+            // Manual input
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Enter ingredient manually',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () => _addIngredient(_controller.text),
+                  child: const Text('Add'),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            // Dropdown list
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'Select from list',
+                border: OutlineInputBorder(),
+              ),
+              items: _availableIngredients.map((ingredient) {
+                return DropdownMenuItem(
+                  value: ingredient,
+                  child: Text(ingredient),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) _addIngredient(value);
+              },
+            ),
+
+            const SizedBox(height: 20),
+
+            // Selected ingredients
+            const Text(
+              'Selected Ingredients:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+
+            Expanded(
+              child: _selectedIngredients.isEmpty
+                  ? const Center(child: Text('No ingredients added yet.'))
+                  : ListView.builder(
+                      itemCount: _selectedIngredients.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: ListTile(
+                            title: Text(_selectedIngredients[index]),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  _selectedIngredients.removeAt(index);
+                                });
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+
+            // Clear button
+            if (_selectedIngredients.isNotEmpty)
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton.icon(
+                  onPressed: _clearAll,
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Clear All'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
