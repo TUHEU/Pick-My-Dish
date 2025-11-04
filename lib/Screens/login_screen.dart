@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:pick_my_dish/Screens/login_screen.dart';
+import 'package:pick_my_dish/Screens/Register_screen.dart';
 import 'package:pick_my_dish/constants.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
+    return  Scaffold(body: Container(
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
@@ -64,30 +63,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 5),
 
                   Text(
-                    "Register",
+                    "Login",
                     style: title,
                   ),
 
                   SizedBox(height: 15),   
-              
-                  Row(
-                    children: [
-                      Icon(Icons.person,
-                      color: Colors.white,
-                      size: iconSize,),
-                      SizedBox(width: 10,),
-                      Expanded(child:
-                      TextField(
-                        style: text,
-                        decoration: InputDecoration(
-                          hintText: "Full Name",
-                          hintStyle: placeHolder,
-                        ),
-                      ),
-                    )],
-                  ) ,
-
-                  SizedBox(height: 5),
 
                   Row(
                     children: [
@@ -136,34 +116,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     )],
                   ),
 
-                  SizedBox(height: 5),
-
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Icon(Icons.key,
-                      color: Colors.white,
-                      size: iconSize,),
-                      SizedBox(width: 10,),
-                      Expanded(child:
-                      TextField(
-                        style: text,
-                        obscureText: !isPasswordVisible,
-                        decoration: InputDecoration(
-                          hintText: "Confirm Password",
-                          hintStyle: placeHolder,
-                          suffixIcon: IconButton(
-                          icon: Icon(
-                            isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              isPasswordVisible = !isPasswordVisible;
-                            });
-                          },
-                        ),
-                        ),
+                     GestureDetector(
+                      onTap: () {
+                        // Navigate to login screen
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                      },
+                      child: Text(
+                        "Forgot Password? ",
+                        style: footerClickable
                       ),
-                    )],
+                    ),
+                      
+                    ],
                   ),
 
                   SizedBox(height: 20),
@@ -185,11 +152,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       // Registration logic
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange, // Your color
+                      backgroundColor: Colors.transparent, // Your color
+                      side: BorderSide(color: Colors.white, width: 2),
                       minimumSize: Size(double.infinity, 50),
                     ),
                     child: Text(
-                      "Register",
+                      "Login",
                       style:  title,
                     ),
                   ),
@@ -201,19 +169,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 20),
                     child:
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Already Registered? ",
+                        "Not Registered Yet? ",
                         style: footer,),
                      GestureDetector(
                       onTap: () {
                         // Navigate to login screen
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
                       },
                       child: Text(
-                        "Login Now",
+                        "Register Now",
                         style: footerClickable
                       ),
                     ),
