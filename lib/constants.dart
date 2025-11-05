@@ -13,6 +13,13 @@ const title = TextStyle(
   fontSize: 37,
 );
 
+const mediumtitle = TextStyle(
+  color: Colors.white,
+  fontFamily: 'TimesNewRoman',
+  fontWeight: FontWeight.w600,
+  fontSize: 23,
+);
+
 const footer = TextStyle(
   color: Colors.white,
   fontFamily: 'TimesNewRoman',
@@ -30,6 +37,7 @@ const footerClickable = TextStyle(
 const text = TextStyle(
   fontFamily: 'TimesNewRoman',
   color: Colors.white,
+  fontWeight: FontWeight.w600,
   fontSize: 18,
 );
 
