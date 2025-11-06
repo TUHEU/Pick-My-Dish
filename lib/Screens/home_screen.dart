@@ -22,6 +22,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+      backgroundColor: Colors.black,
+      elevation: 0,
+      leading: Padding(
+      padding: EdgeInsets.only(left: 30, top: 30),
+      child:GestureDetector(
+        onTap: () {
+          // Handle menu click
+        },
+        child: Image.asset(
+          'assets/icons/hamburger.png',
+          width: 24,
+          height: 24,
+        ),
+      ),
+      ),
+      ),
+    
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -38,21 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Stack(
           children: [
-            // Hamburger Menu
-            Positioned(
-              top: 50,
-              left: 30,
-              child: GestureDetector(
-                onTap: () {
-                  // Handle menu click
-                },
-                child: Image.asset(
-                  'assets/icons/hamburger.png',
-                  width: 24,
-                  height: 24,
-                ),
-              ),
-            ),
 
             Padding(
               padding: EdgeInsets.all(30),
@@ -238,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Text(
                 "Generate Personalized Recipes",
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: text,
               ),
             ),
           ),
@@ -260,17 +263,17 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             category,
-            style: TextStyle(color: Colors.orange, fontSize: 12),
+            style: categoryText
           ),
           SizedBox(height: 5),
           Text(
             title,
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            style: text,
           ),
           SizedBox(height: 10),
           Text(
             calories,
-            style: TextStyle(color: Colors.white70, fontSize: 12),
+            style:caloriesText
           ),
         ],
       ),

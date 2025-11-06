@@ -41,6 +41,19 @@ const text = TextStyle(
   fontSize: 18,
 );
 
+const caloriesText = TextStyle(
+  fontFamily: 'TimesNewRoman',
+  color: Colors.white,
+  fontSize: 14,
+);
+
+const categoryText = TextStyle(
+  fontFamily: 'TimesNewRoman',
+  color: Colors.orange,
+  fontSize: 16,
+);
+
+
 const placeHolder = TextStyle(
   fontFamily: 'TimesNewRoman',
   color: Color.fromARGB(193, 255, 255, 255),
