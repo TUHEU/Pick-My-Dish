@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
+  // Run the app starting with PickMyDishApp widget
   runApp(const PickMyDishApp());
 }
 
+/// Main app widget that sets up the theme and initial screen
 class PickMyDishApp extends StatelessWidget {
   const PickMyDishApp({super.key});
 
@@ -13,19 +15,20 @@ class PickMyDishApp extends StatelessWidget {
       title: 'PickMyDish',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
+          seedColor: Colors.blue, // Primary brand color
           brightness: Brightness.light,
         ),
-        useMaterial3: true,
-        fontFamily: 'Inter',
+        useMaterial3: true, // Enable Material 3 design
+        fontFamily: 'Inter', // Custom font family
       ),
-      home: const SplashScreen(),
-      debugShowCheckedModeBanner: false,
+      home: const SplashScreen(), // Start with splash screen
+      debugShowCheckedModeBanner: false, // Remove debug banner
     );
   }
 }
 
-// Enhanced Splash Screen with animations
+/// Splash Screen with entrance animations
+/// Shows app logo and transitions to home screen after delay
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -36,50 +39,61 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> 
     with SingleTickerProviderStateMixin {
   
+  // Animation controllers for splash screen effects
   late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation; // Scale effect for logo
+  late Animation<double> _fadeAnimation;  // Fade in effect for content
 
   @override
   void initState() {
     super.initState();
-    _initializeAnimations();
-    _initializeApp();
+    _initializeAnimations(); // Set up animations
+    _initializeApp();        // Handle app initialization and navigation
   }
 
+  /// Sets up all animations used in the splash screen
   void _initializeAnimations() {
+    // Main animation controller with 1.5 second duration
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),
-      vsync: this,
+      vsync: this, // Use current widget as ticker provider
     );
 
+    // Scale animation: starts at 50% size and grows to 100%
     _scaleAnimation = Tween<double>(
       begin: 0.5,
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Curves.elasticOut,
+      curve: Curves.elasticOut, // Bouncy scaling effect
     ));
 
+    // Fade animation: starts invisible and fades in
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeIn,
+      curve: Curves.easeIn, // Smooth fade in
     ));
 
+    // Start the animations
     _controller.forward();
   }
 
+  /// Handles app initialization and navigation to home screen
   void _initializeApp() async {
+    // Wait for 3 seconds to show splash screen
     await Future.delayed(const Duration(seconds: 3));
+    
+    // Only navigate if widget is still in the tree
     if (mounted) {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Fade transition between screens
             return FadeTransition(
               opacity: animation,
               child: child,
@@ -93,58 +107,58 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller.dispose(); // Clean up animation controller
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.primary, // Use theme color
       body: Center(
         child: AnimatedBuilder(
-          animation: _controller,
+          animation: _controller, // Rebuild when animation updates
           builder: (context, child) {
             return Opacity(
-              opacity: _fadeAnimation.value,
+              opacity: _fadeAnimation.value, // Apply fade effect
               child: Transform.scale(
-                scale: _scaleAnimation.value,
-                child: child,
+                scale: _scaleAnimation.value, // Apply scale effect
+                child: child, // The actual content to animate
               ),
             );
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Animated App Icon
+              // Animated App Icon Container
               Container(
                 width: 140,
                 height: 140,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
+                  color: Colors.white, // White background for logo
+                  borderRadius: BorderRadius.circular(28), // Rounded corners
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withOpacity(0.2), // Subtle shadow
                       blurRadius: 20,
-                      offset: const Offset(0, 8),
+                      offset: const Offset(0, 8), // Shadow position
                     ),
                   ],
                 ),
                 child: Icon(
-                  Icons.restaurant_menu,
+                  Icons.restaurant_menu, // App logo icon
                   size: 70,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary, // Theme color
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 32), // Spacing between elements
               
-              // App Title with gradient
+              // App Title with gradient text effect
               ShaderMask(
                 shaderCallback: (bounds) => LinearGradient(
                   colors: [
                     Colors.white,
-                    Colors.white.withOpacity(0.8),
+                    Colors.white.withOpacity(0.8), // Gradient from solid to semi-transparent
                   ],
                 ).createShader(bounds),
                 child: const Text(
@@ -152,33 +166,33 @@ class _SplashScreenState extends State<SplashScreen>
                   style: TextStyle(
                     fontSize: 42,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.white, // Base color for gradient
                   ),
                 ),
               ),
               const SizedBox(height: 12),
               
-              // Subtitle
+              // Subtitle with delayed appearance
               AnimatedOpacity(
-                opacity: _controller.value > 0.5 ? 1.0 : 0.0,
+                opacity: _controller.value > 0.5 ? 1.0 : 0.0, // Show after 50% animation
                 duration: const Duration(milliseconds: 500),
                 child: const Text(
                   'Your Personal Recipe Companion',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white70,
+                    color: Colors.white70, // Semi-transparent white
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
               const SizedBox(height: 48),
               
-              // Animated Loading Indicator
+              // Loading indicator to show app is initializing
               CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Colors.white.withOpacity(0.8),
+                  Colors.white.withOpacity(0.8), // Semi-transparent white
                 ),
-                strokeWidth: 3,
+                strokeWidth: 3, // Thinner progress indicator
               ),
             ],
           ),
@@ -188,7 +202,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// Main Home Screen with navigation
+/// Main Home Screen with bottom navigation
+/// Handles switching between Home, Explore, and Profile sections
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -197,14 +212,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 0; // Current selected tab index
 
+  // List of main pages for navigation
   final List<Widget> _pages = [
-    const HomeContent(),
-    const ExploreScreen(),
-    const ProfileScreen(),
+    const HomeContent(),   // Home tab content
+    const ExploreScreen(), // Explore tab content
+    const ProfileScreen(), // Profile tab content
   ];
 
+  /// Navigates to the Settings screen
   void _navigateToSettings(BuildContext context) {
     Navigator.push(
       context,
@@ -215,14 +232,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Only show app bar on home screen, not on explore/profile
       appBar: _currentIndex == 0
           ? AppBar(
               title: const Text('Pick-My-Dish'),
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-              elevation: 0,
+              elevation: 0, // Remove shadow
               centerTitle: false,
               actions: [
+                // Settings button in top right
                 IconButton(
                   icon: const Icon(Icons.settings_outlined),
                   onPressed: () => _navigateToSettings(context),
@@ -230,12 +249,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             )
           : null,
-      body: _pages[_currentIndex],
+      body: _pages[_currentIndex], // Display current page
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (int index) {
           setState(() {
-            _currentIndex = index;
+            _currentIndex = index; // Update selected tab
           });
         },
         destinations: const [
@@ -259,6 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Placeholder navigation methods for home screen actions
   void _navigateToRecipeSearch(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -278,10 +298,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// Home Content (moved from original HomeScreen)
+/// Home Content Screen
+/// Main dashboard with welcome message, quick actions, and recent activity
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
 
+  // Placeholder navigation methods for action cards
   void _navigateToRecipeSearch(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -303,13 +325,13 @@ class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(24.0), // Consistent spacing around content
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Welcome Header
+          // Welcome Header Section with gradient background
           Container(
-            width: double.infinity,
+            width: double.infinity, // Full width container
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -320,7 +342,7 @@ class HomeContent extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20), // Rounded corners
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -330,8 +352,8 @@ class HomeContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                    height: 1.2,
+                    color: Theme.of(context).colorScheme.primary, // Theme color
+                    height: 1.2, // Line height for better readability
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -339,32 +361,33 @@ class HomeContent extends StatelessWidget {
                   'Struggling to decide what to cook? Let us help you discover amazing recipes based on what you have and what you love.',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey.shade700,
-                    height: 1.5,
+                    color: Colors.grey.shade700, // Subtle text color
+                    height: 1.5, // Comfortable line spacing
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 40), // Section spacing
           
-          // Quick Actions Grid
+          // Quick Actions Section Header
           Text(
             'Quick Actions',
             style: TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w600, // Semi-bold for section headers
               color: Colors.grey.shade800,
             ),
           ),
           const SizedBox(height: 16),
           
+          // Quick Actions Grid - 2x2 grid of feature cards
           GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
+            shrinkWrap: true, // Allow grid to scroll within list
+            physics: const NeverScrollableScrollPhysics(), // Prevent nested scrolling
+            crossAxisCount: 2, // 2 cards per row
+            crossAxisSpacing: 16, // Horizontal spacing between cards
+            mainAxisSpacing: 16, // Vertical spacing between cards
             children: [
               // Find Recipes Card
               _buildActionCard(
@@ -422,16 +445,16 @@ class HomeContent extends StatelessWidget {
             ],
           ),
           
-          const SizedBox(height: 40),
+          const SizedBox(height: 40), // Section spacing
           
           // Recent Activity Section (Placeholder)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: Colors.grey.shade50, // Very light grey background
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(color: Colors.grey.shade200), // Subtle border
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -449,7 +472,7 @@ class HomeContent extends StatelessWidget {
                   'Your cooking journey starts here! Explore recipes and save your favorites to see them in this section.',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey.shade600,
+                    color: Colors.grey.shade600, // Medium grey for body text
                   ),
                 ),
               ],
@@ -460,55 +483,58 @@ class HomeContent extends StatelessWidget {
     );
   }
 
+  /// Helper method to build consistent action cards
+  /// Each card has an icon, title, subtitle, and tap action
   Widget _buildActionCard({
     required BuildContext context,
     required IconData icon,
     required String title,
     required String subtitle,
-    required Color color,
+    required Color color, // Primary color for the card
     required VoidCallback onTap,
   }) {
     return Card(
-      elevation: 2,
+      elevation: 2, // Subtle shadow
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16), // Rounded card corners
       ),
       child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        onTap: onTap, // Handle card taps
+        borderRadius: BorderRadius.circular(16), // Match card border radius
         child: Container(
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Circular icon container with colored background
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withOpacity(0.1), // Light version of primary color
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   icon,
-                  color: color,
+                  color: color, // Primary color for icon
                   size: 28,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 12), // Spacing between icon and text
               Text(
                 title,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: color,
+                  color: color, // Use primary color for title
                   fontSize: 16,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 4), // Small spacing between title and subtitle
               Text(
                 subtitle,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey.shade600,
+                  color: Colors.grey.shade600, // Grey for secondary text
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -520,7 +546,8 @@ class HomeContent extends StatelessWidget {
   }
 }
 
-// Explore Screen
+/// Explore Screen - Placeholder for future explore functionality
+/// Will contain recipe discovery, categories, and search features
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
 
@@ -540,7 +567,7 @@ class ExploreScreen extends StatelessWidget {
             Icon(
               Icons.explore_rounded,
               size: 80,
-              color: Colors.grey,
+              color: Colors.grey, // Grey icon for placeholder
             ),
             SizedBox(height: 20),
             Text(
@@ -566,7 +593,8 @@ class ExploreScreen extends StatelessWidget {
   }
 }
 
-// Profile Screen
+/// Profile Screen - Placeholder for future user profile functionality
+/// Will contain user account, preferences, and cooking history
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -612,7 +640,8 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-// Settings Screen
+/// Settings Screen - Placeholder for future app settings
+/// Will contain app preferences, notifications, and account settings
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -626,7 +655,7 @@ class SettingsScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context), // Back navigation
         ),
       ),
       body: const Center(
