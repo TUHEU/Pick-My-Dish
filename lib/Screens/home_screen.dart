@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 60),
+                    SizedBox(height: 10),
                     
                     // Welcome Section
                     Row(
@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSideMenu() {
   return Container(
-    width: MediaQuery.of(context).size.width * 0.8,
+    width: MediaQuery.of(context).size.width * 0.9,
     decoration: BoxDecoration(
       color: Colors.black.withOpacity(0.8),
       borderRadius: BorderRadius.only(
@@ -307,6 +307,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+        Container(
+        color: Colors.black.withOpacity(0.5), 
+       ),
         
         Padding(
           padding: EdgeInsets.all(30),
@@ -315,13 +318,17 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               SizedBox(height: 60),
               
+              Row(
+               children: [
               // Profile Section
               CircleAvatar(
                 radius: 40,
                 backgroundImage: AssetImage('assets/login/logo.png'), // Replace with profile image
               ),
-              SizedBox(height: 15),
-              Text("Username", style: title.copyWith(fontSize: 22)),
+              SizedBox(width: 25),
+              Text("kynmmarshall", style: title.copyWith(fontSize: 22)),
+              ]
+              ),
               SizedBox(height: 5),
               GestureDetector(
                 onTap: () {
@@ -330,13 +337,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: Text("View Profile", style: footerClickable),
               ),
-              SizedBox(height: 40),
+
+              SizedBox(height: 50),
               
               // Menu Items
-              _buildMenuItem(Icons.home, "Home", () {}),
-              _buildMenuItem(Icons.favorite, "Favorites", () {}),
+              _buildMenuItem(Icons.home, "Home", () {Navigator.pop(context);}),
+              SizedBox(height: 20),
+              _buildMenuItem(Icons.favorite, "Favorites", () {Navigator.pop(context);}),
+              SizedBox(height: 20),
+              _buildMenuItem(Icons.help, "Help", () {Navigator.pop(context);}),
               Spacer(),
-              _buildMenuItem(Icons.logout, "Logout", () {}),
+              _buildMenuItem(Icons.logout, "Logout", () {Navigator.pop(context);}),
             ],
           ),
         ),
@@ -347,8 +358,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMenuItem(IconData icon, String title, Function onTap) {
   return ListTile(
-    leading: Icon(icon, color: Colors.orange, size: 28),
-    title: Text(title, style: text.copyWith(fontSize: 18)),
+    leading: Icon(icon, color: Colors.orange, size: 32),
+    title: Text(title, style: text.copyWith(fontSize: 22)),
     onTap: () => onTap(),
     contentPadding: EdgeInsets.zero,
   );
