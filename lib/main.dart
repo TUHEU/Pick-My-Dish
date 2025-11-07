@@ -205,6 +205,13 @@ class _HomeScreenState extends State<HomeScreen> {
     const ProfileScreen(),
   ];
 
+  void _navigateToSettings(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,14 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.settings_outlined),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Settings - Coming Soon!'),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
+                  onPressed: () => _navigateToSettings(context),
                 ),
               ],
             )
@@ -591,6 +591,56 @@ class ProfileScreen extends StatelessWidget {
             SizedBox(height: 20),
             Text(
               'Profile Page',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Content coming soon...',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Settings Screen
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.settings_rounded,
+              size: 80,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Settings Page',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
