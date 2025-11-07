@@ -188,213 +188,56 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// Enhanced Home Screen with better layout and navigation skeleton
-class HomeScreen extends StatelessWidget {
+// Main Home Screen with navigation
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  void _navigateToRecipeSearch(BuildContext context) {
-    // Placeholder for recipe search navigation
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Recipe Search - Coming Soon!'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-  void _navigateToFavorites(BuildContext context) {
-    // Placeholder for favorites navigation
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Favorites - Coming Soon!'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    const HomeContent(),
+    const ExploreScreen(),
+    const ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('PickMyDish'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              // Placeholder for settings
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Settings - Coming Soon!'),
-                  duration: Duration(seconds: 1),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome Header
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                    Theme.of(context).colorScheme.primary.withOpacity(0.05),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Welcome to PickMyDish! 👋',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Struggling to decide what to cook? Let us help you discover amazing recipes based on what you have and what you love.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey.shade700,
-                      height: 1.5,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 40),
-            
-            // Quick Actions Grid
-            Text(
-              'Quick Actions',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade800,
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              children: [
-                // Find Recipes Card
-                _buildActionCard(
-                  context: context,
-                  icon: Icons.search_rounded,
-                  title: 'Find Recipes',
-                  subtitle: 'Search by ingredients',
-                  color: Colors.blue,
-                  onTap: () => _navigateToRecipeSearch(context),
-                ),
-                
-                // Favorites Card
-                _buildActionCard(
-                  context: context,
-                  icon: Icons.favorite_rounded,
-                  title: 'My Favorites',
-                  subtitle: 'Saved recipes',
-                  color: Colors.red,
-                  onTap: () => _navigateToFavorites(context),
-                ),
-                
-                // Random Recipe Card
-                _buildActionCard(
-                  context: context,
-                  icon: Icons.shuffle_rounded,
-                  title: 'Surprise Me',
-                  subtitle: 'Random recipe',
-                  color: Colors.purple,
-                  onTap: () {
+      appBar: _currentIndex == 0
+          ? AppBar(
+              title: const Text('Pick-My-Dish'),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+              elevation: 0,
+              centerTitle: false,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.settings_outlined),
+                  onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Random Recipe - Coming Soon!'),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
-                ),
-                
-                // Meal Planner Card
-                _buildActionCard(
-                  context: context,
-                  icon: Icons.calendar_today_rounded,
-                  title: 'Meal Plan',
-                  subtitle: 'Weekly planning',
-                  color: Colors.green,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Meal Planner - Coming Soon!'),
+                        content: Text('Settings - Coming Soon!'),
                         duration: Duration(seconds: 1),
                       ),
                     );
                   },
                 ),
               ],
-            ),
-            
-            const SizedBox(height: 40),
-            
-            // Recent Activity Section (Placeholder)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Recent Activity',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Your cooking journey starts here! Explore recipes and save your favorites to see them in this section.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      
-      // Bottom Navigation Bar
+            )
+          : null,
+      body: _pages[_currentIndex],
       bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
@@ -410,6 +253,207 @@ class HomeScreen extends StatelessWidget {
             icon: Icon(Icons.person_outlined),
             selectedIcon: Icon(Icons.person_rounded),
             label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToRecipeSearch(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Recipe Search - Coming Soon!'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  void _navigateToFavorites(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Favorites - Coming Soon!'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+}
+
+// Home Content (moved from original HomeScreen)
+class HomeContent extends StatelessWidget {
+  const HomeContent({super.key});
+
+  void _navigateToRecipeSearch(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Recipe Search - Coming Soon!'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  void _navigateToFavorites(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Favorites - Coming Soon!'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Welcome Header
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  Theme.of(context).colorScheme.primary.withOpacity(0.05),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Welcome to Pick-My-Dish! 👋',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Struggling to decide what to cook? Let us help you discover amazing recipes based on what you have and what you love.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey.shade700,
+                    height: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 40),
+          
+          // Quick Actions Grid
+          Text(
+            'Quick Actions',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade800,
+            ),
+          ),
+          const SizedBox(height: 16),
+          
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            children: [
+              // Find Recipes Card
+              _buildActionCard(
+                context: context,
+                icon: Icons.search_rounded,
+                title: 'Find Recipes',
+                subtitle: 'Search by ingredients',
+                color: Colors.blue,
+                onTap: () => _navigateToRecipeSearch(context),
+              ),
+              
+              // Favorites Card
+              _buildActionCard(
+                context: context,
+                icon: Icons.favorite_rounded,
+                title: 'My Favorites',
+                subtitle: 'Saved recipes',
+                color: Colors.red,
+                onTap: () => _navigateToFavorites(context),
+              ),
+              
+              // Random Recipe Card
+              _buildActionCard(
+                context: context,
+                icon: Icons.shuffle_rounded,
+                title: 'Surprise Me',
+                subtitle: 'Random recipe',
+                color: Colors.purple,
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Random Recipe - Coming Soon!'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+              ),
+              
+              // Meal Planner Card
+              _buildActionCard(
+                context: context,
+                icon: Icons.calendar_today_rounded,
+                title: 'Meal Plan',
+                subtitle: 'Weekly planning',
+                color: Colors.green,
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Meal Planner - Coming Soon!'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 40),
+          
+          // Recent Activity Section (Placeholder)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Recent Activity',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Your cooking journey starts here! Explore recipes and save your favorites to see them in this section.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -470,6 +514,98 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// Explore Screen
+class ExploreScreen extends StatelessWidget {
+  const ExploreScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Explore'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.explore_rounded,
+              size: 80,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Explore Page',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Content coming soon...',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Profile Screen
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.person_rounded,
+              size: 80,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Profile Page',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Content coming soon...',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
         ),
       ),
     );
