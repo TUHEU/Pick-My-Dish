@@ -1,5 +1,6 @@
 import 'dart:ui'; 
 import 'package:flutter/material.dart';
+import 'package:pick_my_dish/Screens/profile_screen.dart';
 import 'package:pick_my_dish/constants.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -317,13 +318,22 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 60),
-              
+              Row(
+                children: [
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(Icons.arrow_back, color: Colors.orange, size: iconSize),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
               Row(
                children: [
               // Profile Section
               CircleAvatar(
                 radius: 40,
-                backgroundImage: AssetImage('assets/login/logo.png'), // Replace with profile image
+                backgroundImage: AssetImage('assets/login/noPicture.png'), // Replace with profile image
               ),
               SizedBox(width: 25),
               Text("kynmmarshall", style: title.copyWith(fontSize: 22)),
@@ -331,12 +341,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 5),
               GestureDetector(
-                onTap: () {
-                  // Navigate to profile
-                  Navigator.pop(context);
-                },
-                child: Text("View Profile", style: footerClickable),
-              ),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+              },
+              child: Text("View Profile", style: footerClickable),
+            ),
 
               SizedBox(height: 50),
               
