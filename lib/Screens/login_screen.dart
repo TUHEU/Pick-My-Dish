@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   )
                 ),
 
-              Padding(padding: EdgeInsets.all(30),
+              Padding(padding: const EdgeInsets.all(30),
               child: Center(
                 child: SingleChildScrollView(
                 child: Column(
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: 20),
+                    padding: const EdgeInsets.only(bottom: 20),
                     child:
 
                   Row(

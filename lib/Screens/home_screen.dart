@@ -1,6 +1,7 @@
 import 'dart:ui'; 
 import 'package:flutter/material.dart';
 import 'package:pick_my_dish/Screens/profile_screen.dart';
+import 'package:pick_my_dish/Screens/recipe_screen.dart';
 import 'package:pick_my_dish/constants.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -103,31 +104,45 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
+                        GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RecipesScreen()));
+                        },
+                        child: Text(
                           "See All",
                           style: TextStyle(
                             color: Colors.orange,
                             fontSize: 14,
                           ),
                         ),
+                      ),
                       ],
                     ),
                     SizedBox(height: 15),
 
                     // Recipe Cards
                     // Recipe Cards - Responsive layout
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                
-                          return Column(
-                            
-                            children: [
-                              _buildRecipeCard("Breakfast", "Toast with Berries", "1003"),
-                              SizedBox(height: 15),
-                              _buildRecipeCard("Dinner", "Chicken Burger", "2008"),
-                            ],
-                          );
-                        }
+                    // Replace the Recipe Cards section with:
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 2, // Since you have 2 cards
+                      itemBuilder: (context, index) {
+                        final recipes = [
+                          {"category": "Breakfast", "title": "Toast with Berries", "calories": "1003"},
+                          {"category": "Dinner", "title": "Chicken Burger", "calories": "2008"},
+                        ];
+                        return Column(
+                        children: [
+                          _buildRecipeCard(
+                            recipes[index]["category"]!,
+                            recipes[index]["title"]!, 
+                            recipes[index]["calories"]!
+                          ),
+                          if (index < 1) SizedBox(height: 25), // Adds space after each item except last
+                        ],
+                      );
+                      },
                     ),
                     SizedBox(height: 30),
 
@@ -144,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildPersonalizationSection() {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(15),

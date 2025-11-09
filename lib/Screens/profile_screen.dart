@@ -24,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
         color: Colors.black
         ),
         child: Stack(
@@ -57,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           bottom: 0,
                           right: 0,
                           child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.orange,
                               shape: BoxShape.circle,
                             ),
@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         hintText: "Username",
                         hintStyle: placeHolder,
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -91,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         backgroundColor: Colors.orange,
                         minimumSize: Size(double.infinity, 50),
                       ),
-                      child: Text("Update Profile Info", style: text),
+                      child: Text("Confirm", style: text.copyWith(fontSize: 30)),
                     ),
                   ],
                 ),
