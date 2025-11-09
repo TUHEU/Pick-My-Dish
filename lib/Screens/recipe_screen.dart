@@ -9,7 +9,7 @@ class RecipesScreen extends StatefulWidget {
 }
 
 class _RecipesScreenState extends State<RecipesScreen> {
-  List<Map<String, dynamic>> recipes = [
+  List<Map<String, dynamic>> allRecipes = [
     {
       'category': 'Breakfast',
       'name': 'Toast with Berries',
@@ -34,8 +34,70 @@ class _RecipesScreenState extends State<RecipesScreen> {
       'image': 'assets/recipes/test.png',
       'calories': '2008'
     },
+    {
+      'category': 'Breakfast',
+      'name': 'Toast with Berries',
+      'time': '10:03',
+      'isFavorite': false,
+      'image': 'assets/recipes/test.png',
+      'calories': '1003'
+    },
+    {
+      'category': 'Dinner',
+      'name': 'Chicken Burger',
+      'time': '25:30',
+      'isFavorite': true,
+      'image': 'assets/recipes/test.png',
+      'calories': '2008'
+    },
+    {
+      'category': 'Dinner',
+      'name': 'Chicken Burger',
+      'time': '25:30',
+      'isFavorite': true,
+      'image': 'assets/recipes/test.png',
+      'calories': '2008'
+    },
+    {
+      'category': 'Dinner',
+      'name': 'Chicken Burger',
+      'time': '25:30',
+      'isFavorite': true,
+      'image': 'assets/recipes/test.png',
+      'calories': '2008'
+    },
     // Add more recipes here
   ];
+
+  String searchQuery = '';
+  TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+  setState(() {
+    searchQuery = searchController.text.toLowerCase();
+  });
+  } 
+
+  List<Map<String, dynamic>> get filteredRecipes {
+  if (searchQuery.isEmpty) return allRecipes;
+  return allRecipes.where((recipe) {
+    return recipe['name'].toLowerCase().contains(searchQuery) ||
+           recipe['category'].toLowerCase().contains(searchQuery);
+  }).toList();
+}
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +144,11 @@ class _RecipesScreenState extends State<RecipesScreen> {
                     Expanded(
                       child: TextField(
                         style: text,
+                        onChanged: (value) {
+                        setState(() {
+                          searchQuery = value.toLowerCase();
+                        });
+                        },
                         decoration: InputDecoration(
                           hintText: "Search recipes...",
                           hintStyle: placeHolder,
@@ -89,6 +156,13 @@ class _RecipesScreenState extends State<RecipesScreen> {
                         ),
                       ),
                     ),
+                    if (searchController.text.isNotEmpty)
+                      IconButton(
+                        icon: Icon(Icons.clear, color: Colors.white70),
+                        onPressed: () {
+                          searchController.clear();
+                        },
+                      ),
                   ],
                 ),
               ),
@@ -96,16 +170,22 @@ class _RecipesScreenState extends State<RecipesScreen> {
               
               // Recipes Grid
               Expanded(
-                child: GridView.builder(
+                child: filteredRecipes.isEmpty ? Center(
+                  child: Text(
+                          "No recipes found",
+                          style: title,
+                        ),
+                )
+                :GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 15,
                     mainAxisSpacing: 15,
                     childAspectRatio: 0.8,
                   ),
-                  itemCount: recipes.length,
+                  itemCount: filteredRecipes.length,
                   itemBuilder: (context, index) {
-                    return buildRecipeCard(recipes[index]);
+                    return buildRecipeCard(filteredRecipes[index]);
                   },
                 ),
               ),
