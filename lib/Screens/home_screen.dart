@@ -282,14 +282,18 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           // Recipe Image
           Positioned(
-            left: 4,
+            left: 20,
             top: 5,
             child: Container(
               width: 66,
               height: 54,
               decoration: BoxDecoration(
-                color: Colors.grey,
+                //color: Colors.grey,
                 borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                image: AssetImage(recipe['image']),
+                fit: BoxFit.cover,
+              ),
               ),
             ),
           ),
