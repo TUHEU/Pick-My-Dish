@@ -15,7 +15,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
       'name': 'Toast with Berries',
       'time': '10:03',
       'isFavorite': false,
-      'image': 'assets/recipes/toast.png',
+      'image': 'assets/recipes/test.png',
       'calories': '1003'
     },
     {
@@ -23,7 +23,15 @@ class _RecipesScreenState extends State<RecipesScreen> {
       'name': 'Chicken Burger',
       'time': '25:30',
       'isFavorite': true,
-      'image': 'assets/recipes/burger.png',
+      'image': 'assets/recipes/test.png',
+      'calories': '2008'
+    },
+    {
+      'category': 'Dinner',
+      'name': 'Chicken Burger',
+      'time': '25:30',
+      'isFavorite': true,
+      'image': 'assets/recipes/test.png',
       'calories': '2008'
     },
     // Add more recipes here
@@ -36,16 +44,13 @@ class _RecipesScreenState extends State<RecipesScreen> {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Color(0xFF6B6B6B)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+          color: Colors.black
         ),
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
             children: [
+              SizedBox(height: 50,),
               // Header with title and back button
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,7 +61,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
                   ),
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: Icon(Icons.arrow_back, color: Colors.white, size: 30),
+                    child: Icon(Icons.arrow_back, color: Colors.orange, size: iconSize),
                   ),
                 ],
               ),
@@ -100,7 +105,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
                   ),
                   itemCount: recipes.length,
                   itemBuilder: (context, index) {
-                    return _buildRecipeCard(recipes[index]);
+                    return buildRecipeCard(recipes[index]);
                   },
                 ),
               ),
@@ -111,7 +116,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
     );
   }
 
-  Widget _buildRecipeCard(Map<String, dynamic> recipe) {
+  Widget buildRecipeCard(Map<String, dynamic> recipe) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
@@ -121,8 +126,8 @@ class _RecipesScreenState extends State<RecipesScreen> {
         children: [
           // Recipe Image
           Positioned(
-            top: 0,
-            right: 0,
+            top: 20,
+            right: 10,
             child: Container(
               width: 99,
               height: 87,
@@ -148,8 +153,8 @@ class _RecipesScreenState extends State<RecipesScreen> {
               },
               child: Icon(
                 recipe['isFavorite'] ? Icons.favorite : Icons.favorite_border,
-                color: recipe['isFavorite'] ? Colors.red : Colors.white,
-                size: 20,
+                color: Colors.orange,
+                size: iconSize,
               ),
             ),
           ),
@@ -166,7 +171,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
                   recipe['category'],
                   style: categoryText.copyWith(
                     color: Color(0xFF2958FF),
-                    fontSize: 12,
+                    fontSize: 15,
                   ),
                 ),
                 SizedBox(height: 5),
@@ -174,20 +179,20 @@ class _RecipesScreenState extends State<RecipesScreen> {
                 // Recipe Name
                 Text(
                   recipe['name'],
-                  style: text.copyWith(fontSize: 14),
+                  style: text.copyWith(fontSize: 17),
                 ),
                 SizedBox(height: 10),
                 
                 // Time with Icon
                 Row(
                   children: [
-                    Icon(Icons.access_time, color: Colors.orange, size: 16),
+                    Icon(Icons.access_time, color: Colors.white, size: 16),
                     SizedBox(width: 5),
                     Text(
                       recipe['time'],
                       style: TextStyle(
                         color: Colors.orange,
-                        fontSize: 12,
+                        fontSize: 13,
                         fontFamily: 'Lora',
                         fontWeight: FontWeight.w600,
                       ),
