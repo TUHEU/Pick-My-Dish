@@ -66,6 +66,7 @@ flutter:
    - assets/icons/
    - assets/sideMenu/
    - assets/recipes/
+   - assets/fonts/
    
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -82,7 +83,7 @@ flutter:
   fonts:
     - family: TimesNewRoman
       fonts:
-        - asset: assets/fonts/Times.ttf
+        - asset: assets/fonts/times.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
