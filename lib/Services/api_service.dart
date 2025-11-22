@@ -3,13 +3,13 @@ import 'package:http/http.dart' as http;  // For HTTP requests
 
 class ApiService {
   // Backend server URL - using your VPS IP address and port 3000
-  static const String baseUrl = 'http://38.242.246.126:3000';
+  static const String baseUrl = 'http://localhost:3000';
   
   // Test if backend is reachable and database is connected
   static Future<void> testConnection() async {
     try {
       // Send GET request to test endpoint
-      final response = await http.get(Uri.parse('$baseUrl/api/test-db'));
+      final response = await http.get(Uri.parse('$baseUrl/api/pick_my_dish'));
       print('Backend status: ${response.statusCode}');  // Should be 200 if successful
       print('Response: ${response.body}');  // Response data from backend
     } catch (e) {
@@ -63,6 +63,17 @@ class ApiService {
   // Test Login
   bool loggedIn = await login('test@example.com', 'password123');
   print(loggedIn ? '✅ Login successful' : '❌ Login failed');
+}
+
+// Add this test
+static Future<void> testBaseUrl() async {
+  try {
+    final response = await http.get(Uri.parse('$baseUrl/'));
+    print('Base URL status: ${response.statusCode}');
+    print('Base URL response: ${response.body}');
+  } catch (e) {
+    print('Base URL error: $e');
+  }
 }
 
 }
