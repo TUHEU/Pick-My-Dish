@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pick_my_dish/Services/api_service.dart';
 import 'package:pick_my_dish/constants.dart';
-import 'package:pick_my_dish/screens/register_screen.dart';
-import 'package:pick_my_dish/screens/home_screen.dart';
+import 'package:pick_my_dish/Screens/register_screen.dart';
+import 'package:pick_my_dish/Screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

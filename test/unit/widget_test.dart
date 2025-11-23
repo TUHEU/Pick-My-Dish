@@ -131,13 +131,27 @@ void main() {
       expect(find.byType(TextField), findsAtLeast(3));
     });
 
-    testWidgets('ProfileScreen has username field', (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
-      await tester.pumpAndSettle();
-      
-      // Profile screen should have at least one text field
-      expect(find.byType(TextField), findsAtLeast(1));
-    });
+    testWidgets('ProfileScreen shows username field when editing', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
+    await tester.pumpAndSettle();
+    
+    // Initially, the TextField should not be visible (since _isEditing is false)
+    final usernameField = find.byKey(const Key('username_field'));
+    expect(usernameField, findsNothing);
+    
+    // Find and tap the edit button
+    final editButton = find.byKey(const Key('edit_button'));
+    expect(editButton, findsOneWidget);
+    await tester.tap(editButton);
+    await tester.pumpAndSettle();
+    
+    // Now the TextField should be visible
+    expect(usernameField, findsOneWidget);
+    
+    // Verify the TextField has the correct hint text
+    final textField = tester.widget<TextField>(usernameField);
+    expect(textField.decoration?.hintText, 'Enter username');
+  });
   });
 
   group('Button Tests', () {
@@ -156,12 +170,13 @@ void main() {
       expect(find.byType(ElevatedButton), findsAtLeast(1));
     });
 
-    testWidgets('ProfileScreen has confirm button', (WidgetTester tester) async {
+    testWidgets('ProfileScreen has save button', (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
       await tester.pumpAndSettle();
       
       expect(find.byType(ElevatedButton), findsAtLeast(1));
     });
+
   });
 
   group('Icon Tests', () {
