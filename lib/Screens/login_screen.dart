@@ -311,7 +311,7 @@ const SizedBox(height: 20),
   }
 
 void _testRegistration() async {
-  print('🔐 Testing registration...');
+  debugPrint('🔐 Testing registration...');
   
   try {
     bool success = await ApiService.register(
@@ -321,28 +321,28 @@ void _testRegistration() async {
     );
     
     if (success) {
-      print('✅ Registration successful!');
+      debugPrint('✅ Registration successful!');
     } else {
-      print('❌ Registration failed - check backend logs');
+      debugPrint('❌ Registration failed - check backend logs');
     }
   } catch (e) {
-    print('❌ Registration error: $e');
+    debugPrint('❌ Registration error: $e');
   }
 }
 
 void _testLogin() async {
-  print('🔐 Testing login...');
+  debugPrint('🔐 Testing login...');
   
   try {
     bool success = await ApiService.login('Jane@example.com', 'password123');
     
     if (success) {
-      print('✅ Login successful!');
+      debugPrint('✅ Login successful!');
     } else {
-      print('❌ Login failed - user may not exist');
+      debugPrint('❌ Login failed - user may not exist');
     }
   } catch (e) {
-    print('❌ Login error: $e');
+    debugPrint('❌ Login error: $e');
   }
 }
 
