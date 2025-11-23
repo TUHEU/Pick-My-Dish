@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pick_my_dish/Screens/login_screen.dart';
 import 'package:pick_my_dish/constants.dart';
 import 'package:pick_my_dish/services/database_service.dart';
 import 'package:pick_my_dish/screens/favorite_screen.dart';
@@ -687,7 +688,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),
                 const Spacer(),
                 _buildMenuItem(Icons.logout, "Logout", () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
                 }),
               ],
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pick_my_dish/Screens/login_screen.dart';
+import 'package:pick_my_dish/Services/api_service.dart';
 import 'package:pick_my_dish/constants.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -10,6 +11,81 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+   final TextEditingController _fullNameController = TextEditingController();
+   final TextEditingController _emailController = TextEditingController();
+   final TextEditingController _passwordController = TextEditingController();
+   final TextEditingController _confirmPasswordController = TextEditingController();
+  
+  void _register() async {
+    if (_fullNameController.text.isEmpty || 
+        _emailController.text.isEmpty || 
+        _passwordController.text.isEmpty ||
+        _confirmPasswordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please fill in all fields', style: text),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Passwords do not match', style: text),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(color: Colors.orange),
+      ),
+    );
+
+    try {
+      bool success = await ApiService.register(
+        _fullNameController.text.trim(),
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
+
+      Navigator.pop(context); // Hide loading
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Registration successful! Please login.', style: text),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context); // Go back to login
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Registration failed', style: text),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      Navigator.pop(context); // Hide loading
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e', style: text),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,6 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Expanded(child:
                       TextField(
                         style: text,
+                        controller: _fullNameController,
                         decoration: InputDecoration(
                           hintText: "Full Name",
                           hintStyle: placeHolder,
@@ -98,6 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Expanded(child:
                       TextField(
                         style: text,
+                        controller: _emailController,
                         decoration: InputDecoration(
                           hintText: "Email Address",
                           hintStyle: placeHolder,
@@ -118,6 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextField(
                         style: text,
                         obscureText: !isPasswordVisible,
+                        controller: _passwordController,
                         decoration: InputDecoration(
                           hintText: "Password",
                           hintStyle: placeHolder,
@@ -147,6 +226,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Expanded(child:
                       TextField(
                         style: text,
+                        controller: _confirmPasswordController,
                         obscureText: !isPasswordVisible,
                         decoration: InputDecoration(
                           hintText: "Confirm Password",
@@ -181,9 +261,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 20),
 
                   ElevatedButton(
-                    onPressed: () {
-                      // Registration logic
-                    },
+                    onPressed: _register,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange, // Your color
                       minimumSize: Size(double.infinity, 50),

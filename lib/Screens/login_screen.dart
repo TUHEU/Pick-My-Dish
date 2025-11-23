@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pick_my_dish/Services/api_service.dart';
 import 'package:pick_my_dish/constants.dart';
 import 'package:pick_my_dish/screens/register_screen.dart';
 import 'package:pick_my_dish/screens/home_screen.dart';
@@ -15,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _login() {
+  void _login() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -26,11 +27,51 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Navigate to home screen on successful login
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(color: Colors.orange),
+      ),
     );
+
+    try {
+      // Call your backend API
+      bool success = await ApiService.login(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
+
+      // Hide loading
+      Navigator.pop(context);
+
+      if (success) {
+        // Login successful - navigate to home
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        // Login failed
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Invalid email or password', style: text),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      // Hide loading
+      Navigator.pop(context);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Connection error: $e', style: text),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -161,7 +202,37 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       const SizedBox(height: 20),
+                      // Add this after the Login Button and before Google Sign In
 
+// TEST BUTTONS - Remove these later
+Row(
+  children: [
+    Expanded(
+      child: ElevatedButton(
+        onPressed: _testRegistration,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          minimumSize: const Size(0, 40),
+        ),
+        child: Text("Test Register", style: text.copyWith(fontSize: 14)),
+      ),
+    ),
+    const SizedBox(width: 10),
+    Expanded(
+      child: ElevatedButton(
+        onPressed: _testLogin,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          minimumSize: const Size(0, 40),
+        ),
+        child: Text("Test Login", style: text.copyWith(fontSize: 14)),
+      ),
+    ),
+  ],
+),
+
+const SizedBox(height: 20),
+// END TEST BUTTONS
                       // Google Sign In
                       GestureDetector(
                         onTap: () {
@@ -181,6 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ),
+                          
                           child: const Icon(
                             Icons.g_mobiledata,
                             color: Colors.red,
@@ -237,4 +309,41 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+void _testRegistration() async {
+  print('🔐 Testing registration...');
+  
+  try {
+    bool success = await ApiService.register(
+      'user1', 
+      'user1@example.com', 
+      'passwffdfd23'
+    );
+    
+    if (success) {
+      print('✅ Registration successful!');
+    } else {
+      print('❌ Registration failed - check backend logs');
+    }
+  } catch (e) {
+    print('❌ Registration error: $e');
+  }
+}
+
+void _testLogin() async {
+  print('🔐 Testing login...');
+  
+  try {
+    bool success = await ApiService.login('Jane@example.com', 'password123');
+    
+    if (success) {
+      print('✅ Login successful!');
+    } else {
+      print('❌ Login failed - user may not exist');
+    }
+  } catch (e) {
+    print('❌ Login error: $e');
+  }
+}
+
 }

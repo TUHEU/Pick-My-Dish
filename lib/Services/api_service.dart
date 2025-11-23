@@ -1,9 +1,15 @@
 import 'dart:convert';  // For JSON encoding/decoding
 import 'package:http/http.dart' as http;  // For HTTP requests
 
+
 class ApiService {
-  // Backend server URL - using your VPS IP address and port 3000
-  static const String baseUrl = 'http://localhost:3000';
+  // Backend server base URL
+    
+    // For physical device testing:
+   //static const String baseUrl = "http://192.168.1.110:3000";
+  
+  // For production (VPS):
+  static const String baseUrl = "http://38.242.246.126:3000";
   
   // Test if backend is reachable and database is connected
   static Future<void> testConnection() async {
@@ -25,32 +31,56 @@ class ApiService {
     return json.decode(response.body);
   }
 
-  // Register a new user with name, email, and password
-  static Future<bool> register(String fullName, String email, String password) async {
-  final response = await http.post(
-    Uri.parse('$baseUrl/api/auth/register'),
-    body: json.encode({
-      'fullName': fullName,
-      'email': email, 
-      'password': password
-    }),
-    headers: {'Content-Type': 'application/json'},
-  );
-  return response.statusCode == 201; // 201 for created
-}
-
-  // Authenticate user with email and password
+  
+  //login user
   static Future<bool> login(String email, String password) async {
-    // Send POST request to login endpoint
-    final response = await http.post(
-      Uri.parse('$baseUrl/api/auth/login'),
-      // Convert Dart Map to JSON string for request body
-      body: json.encode({'email': email, 'password': password}),
-      // Set content type to JSON
-      headers: {'Content-Type': 'application/json'},
-    );
-    // Return true if login successful (status code 200)
-    return response.statusCode == 200;
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/auth/login'),
+        body: json.encode({'email': email, 'password': password}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print('✅ Login successful: ${data['message']}');
+        print('👤 User: ${data['user']}');
+        return true;
+      } else {
+        print('❌ Login failed: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('❌ Login error: $e');
+      return false;
+    }
+  }
+
+// Register a new user with name, email, and password
+static Future<bool> register(String fullName, String email, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/auth/register'),
+        body: json.encode({
+          'fullName': fullName,
+          'email': email,
+          'password': password
+        }),
+        headers: {'Content-Type': 'application/json'},
+      );
+      
+      if (response.statusCode == 201) {
+        final data = json.decode(response.body);
+        print('✅ Registration successful: ${data['message']}');
+        return true;
+      } else {
+        print('❌ Registration failed: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('❌ Registration error: $e');
+      return false;
+    }
   }
 
   static Future<void> testAuth() async {
