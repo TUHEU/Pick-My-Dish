@@ -17,25 +17,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController usernameController = TextEditingController();
   bool _isEditing = false;
 
-  @override
-  void initState() {
-    super.initState();
-   // usernameController.text = ;
-  }
+ @override
+void initState() {
+  super.initState();
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  usernameController.text = userProvider.username;
+}
 
   void _saveProfile() async {
+  // Add this check first
+  if (!mounted) return;
+  
   final userProvider = Provider.of<UserProvider>(context, listen: false);
   
-  bool success = await ApiService.updateUsername(usernameController.text);
+  bool success = await ApiService.updateUsername(
+    usernameController.text,
+    userProvider.userId  
+  );
+
+  
+  // Check mounted again after async operation
+  if (!mounted) return;
   
   if (success) {
-    userProvider.updateUsername(usernameController.text);
+    userProvider.updateUsername(usernameController.text, userProvider.userId);
     setState(() {
       _isEditing = false;
     });
-    // Show success snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Username updated!'), backgroundColor: Colors.green),
+    );
   } else {
-    // Show error snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Update failed!'), backgroundColor: Colors.red),
+    );
   }
 }
 

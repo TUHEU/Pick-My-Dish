@@ -83,6 +83,10 @@ if (response != null && response['user'] != null) {
       // Use the actual user data from API
       userProvider.setUser(User.fromJson(response['user']));
       
+      // Store the user ID from login response
+      userProvider.setUserId(response
+      ['userId']);
+      
       if (context.mounted) {
         Navigator.pushReplacement(
           context, 

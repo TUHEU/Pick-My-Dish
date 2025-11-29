@@ -8,13 +8,16 @@ import 'package:pick_my_dish/Models/user_model.dart';
 class UserProvider with ChangeNotifier {
   // Backing field for the current user. Null when no user is logged in.
   User? _user;
+  int _userId = 0;
 
   /// Returns the current user, or null if not signed in.
   User? get user => _user;
 
   /// Returns the username of the current user, or a default 'User' string
   /// when no user is available.
-  String get username => _user?.username ?? 'User';
+  String get username => _user?.username ?? 'User';  
+  int get userId => _userId;  
+
 
   /// Returns the first name of the current user extracted from fullName,
   /// or falls back to username, or 'User' if no user is available.
@@ -51,7 +54,7 @@ class UserProvider with ChangeNotifier {
   /// Update only the username for the current user and notify listeners.
   ///
   /// If there is no current user, this method does nothing.
-  void updateUsername(String newUsername) {
+  void updateUsername(String newUsername, int userId) {
     if (_user != null) {
       // Use the model's copyWith to preserve other fields.
       _user = _user!.copyWith(username: newUsername);
@@ -103,6 +106,10 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setUserId(int userId) {
+    _userId = userId;
+    notifyListeners();
+  }
   /// Debug method to print current user state
   void printUserState() {
     if (_user == null) {

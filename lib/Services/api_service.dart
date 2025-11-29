@@ -1,6 +1,9 @@
 import 'dart:convert';  // For JSON encoding/decoding
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;  // For HTTP requests
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:pick_my_dish/Providers/user_provider.dart';
+import 'package:provider/provider.dart';  // For HTTP requests
 
 
 class ApiService {
@@ -58,12 +61,12 @@ class ApiService {
   }
 
 // Register a new user with name, email, and password
-static Future<bool> register(String fullName, String email, String password) async {
+static Future<bool> register(String userName, String email, String password) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/api/auth/register'),
         body: json.encode({
-          'fullName': fullName,
+          'userName': userName,
           'email': email,
           'password': password
         }),
@@ -106,15 +109,23 @@ static Future<void> testBaseUrl() async {
 }
 
 //update user name
-static Future<bool> updateUsername(String newUsername) async {
+static Future<bool> updateUsername(String newUsername, int userId) async {
   try {
+     debugPrint('🔄 Updating username: $newUsername for user: $userId');
     final response = await http.put(
       Uri.parse('$baseUrl/api/users/username'),
-      body: json.encode({'username': newUsername}),
+      body: json.encode({
+        'username': newUsername,
+        'userId': userId  // ← Send user ID
+      }),
       headers: {'Content-Type': 'application/json'},
     );
+
+    debugPrint('📡 Status: ${response.statusCode}');
+    debugPrint('📡 Body: ${response.body}');
     return response.statusCode == 200;
   } catch (e) {
+    debugPrint('❌ Error: $e');
     return false;
   }
 }

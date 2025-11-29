@@ -11,7 +11,7 @@ class RegisterScreen extends StatefulWidget {
 }
 enum PasswordStrength { weak, medium, strong }
 class _RegisterScreenState extends State<RegisterScreen> {
-   final TextEditingController _fullNameController = TextEditingController();
+   final TextEditingController _userNameController = TextEditingController();
    final TextEditingController _emailController = TextEditingController();
    final TextEditingController _passwordController = TextEditingController();
    final TextEditingController _confirmPasswordController = TextEditingController();
@@ -87,9 +87,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Expanded(child:
                       TextField(
                         style: text,
-                        controller: _fullNameController,
+                        controller: _userNameController,
                         decoration: InputDecoration(
-                          hintText: "Full Name",
+                          hintText: "User Name",
                           hintStyle: placeHolder,
                         ),
                       ),
@@ -285,13 +285,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     void _register() async {
   // Get trimmed values
-  final fullName = _fullNameController.text.trim();
+  final userName = _userNameController.text.trim();
   final email = _emailController.text.trim();
   final password = _passwordController.text;
   final confirmPassword = _confirmPasswordController.text;
 
   // Check for empty fields
-  if (fullName.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+  if (userName.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Please fill in all fields', style: text),
@@ -356,7 +356,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   );
 
   try {
-    bool success = await ApiService.register(fullName, email, password);
+    bool success = await ApiService.register(userName, email, password);
 
     Navigator.pop(context); // Hide loading
 
