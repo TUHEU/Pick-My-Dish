@@ -97,6 +97,21 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _logout() async {
+    // 1. Clear all user data from provider
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.logout();
+    
+    // 2. Navigate to login (clear navigation stack)
+    if (mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (route) => false, // Remove all previous routes
+      );
+    }
+  }
+
   void _showPersonalizedResults(List<Map<String, dynamic>> recipes) {
     showDialog(
       context: context,
@@ -582,13 +597,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSideMenu() {
+    
     // Load profile picture when menu opens
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      String? imagePath = await ApiService.getProfilePicture(userProvider.userId);
-      if (imagePath != null) {
-        userProvider.updateProfilePicture(imagePath);
-      }
+    String? imagePath = await ApiService.getProfilePicture(userProvider.userId);
+    
+    // Check mounted BEFORE updating UI
+    if (mounted && imagePath != null) {
+      userProvider.updateProfilePicture(imagePath);
+      setState(() {});
+    }
     });
 
     return Container(
@@ -684,12 +703,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),
                 const Spacer(),
                 _buildMenuItem(Icons.logout, "Logout", () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
-                    ),
-                  );
+                  _logout();
                 }),
               ],
             ),

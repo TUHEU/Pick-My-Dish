@@ -71,6 +71,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+  void _logout() async {
+    // 1. Clear all user data from provider
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.logout();
+    
+    // 2. Navigate to login (clear navigation stack)
+    if (mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (route) => false, // Remove all previous routes
+      );
+    }
+  }
+
   void _cancelEdit() {
     setState(() {
      // usernameController.text = ;
@@ -331,14 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: ElevatedButton(
                         key: const Key('logout_button'), // FIX: Add key
                         onPressed: () {
-                          if (context.mounted) {
-                            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
-                          }
+                          _logout();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,

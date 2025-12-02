@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:pick_my_dish/Models/user_model.dart';
 
 /// Provider that holds and manages the current authenticated user.
@@ -19,7 +20,10 @@ class UserProvider with ChangeNotifier {
   String get username => _user?.username ?? 'Guest';  
   int get userId => _userId;  
 
-
+  // Add these for complete cleanup
+  List<Map<String, dynamic>> _userRecipes = [];
+  List<int> _userFavorites = [];
+  Map<String, dynamic> _userSettings = {};
 
   /// Returns the email of the current user, or empty string if not available.
   String get email => _user?.email ?? '';
@@ -30,6 +34,7 @@ class UserProvider with ChangeNotifier {
   /// Indicates whether a user is currently logged in.
   bool get isLoggedIn => _user != null;
 
+  
   /// Set (or replace) the current user and notify listeners.
   ///
   /// Call this after a successful login or when user data is fetched.
@@ -85,5 +90,46 @@ class UserProvider with ChangeNotifier {
       debugPrint('UserProvider: Current user - ${_user!.toString()}');
       debugPrint('UserProvider: First name - $username');
     }
+  }
+  
+  
+  /// Clear ALL user data
+  void clearAllUserData() {
+    _user = null;
+    _userId = 0;
+    _profilePicture = 'assets/login/noPicture.png';
+    _userRecipes = [];
+    _userFavorites = [];
+    _userSettings = {};
+    
+    // Clear image cache
+    _clearImageCache();
+    
+    // Clear local storage (optional)
+    _clearLocalStorage();
+    
+    notifyListeners();
+  }
+
+  Future<void> _clearImageCache() async {
+    try {
+      final cacheManager = DefaultCacheManager();
+      await cacheManager.emptyCache(); // Clear all cached images
+    } catch (e) {
+      debugPrint('Error clearing cache: $e');
+    }
+  }
+
+  Future<void> _clearLocalStorage() async {
+    // Implement local storage clearing if using packages like SharedPreferences
+    // Example:
+    // final prefs = await SharedPreferences.getInstance();
+    // await prefs.clear();
+  }
+
+  /// Logout - clear everything
+  void logout() {
+    clearAllUserData();
+    debugPrint('✅ User logged out - all data cleared');
   }
 }

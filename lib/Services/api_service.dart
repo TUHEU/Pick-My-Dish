@@ -25,15 +25,7 @@ class ApiService {
     }
   }
 
-  // Fetch all recipes from the backend
-  static Future<List<dynamic>> getRecipes() async {
-    // Send GET request to recipes endpoint
-    final response = await http.get(Uri.parse('$baseUrl/api/recipes'));
-    // Convert JSON response to Dart List
-    return json.decode(response.body);
-  }
 
-  
   //login user
   static Future<Map<String, dynamic>?>  login(String email, String password) async {
     try {
@@ -169,4 +161,48 @@ static Future<String?> getProfilePicture(int userId) async {
     return null;
   }
 }
+
+// Get all recipes
+static Future<List<Map<String, dynamic>>> getRecipes() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/api/recipes'));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return List<Map<String, dynamic>>.from(data['recipes']);
+      }
+      return [];
+    } catch (e) {
+      debugPrint('❌ Error fetching recipes: $e');
+      return [];
+    }
+  }
+  
+// Upload recipe with image
+static Future<bool> uploadRecipe(Map<String, dynamic> recipeData, File? imageFile) async {
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/api/recipes'));
+      
+      // Add recipe data
+      request.fields['name'] = recipeData['name'];
+      request.fields['category'] = recipeData['category'];
+      request.fields['time'] = recipeData['time'];
+      request.fields['calories'] = recipeData['calories'];
+      request.fields['ingredients'] = json.encode(recipeData['ingredients']);
+      request.fields['instructions'] = json.encode(recipeData['instructions']);
+      request.fields['userId'] = recipeData['userId'].toString();
+      
+      // Add image if exists
+      if (imageFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('image', imageFile.path)
+        );
+      }
+      
+      var response = await request.send();
+      return response.statusCode == 201;
+    } catch (e) {
+      debugPrint('❌ Error uploading recipe: $e');
+      return false;
+    }
+  }
 }
