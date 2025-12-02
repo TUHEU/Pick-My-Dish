@@ -4,7 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pick_my_dish/Providers/user_provider.dart';
 import 'package:pick_my_dish/Screens/login_screen.dart';
 import 'package:pick_my_dish/Services/api_service.dart';
+import 'package:pick_my_dish/Services/image_cache_service.dart';
 import 'package:pick_my_dish/constants.dart';
+import 'package:pick_my_dish/utils/image_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -82,30 +84,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
   
   if (pickedFile != null) {
-    // Check mounted BEFORE using context
     if (!mounted) return;
     
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     
-    // Convert XFile to File and use UPLOAD method (not update)
     bool success = await ApiService.uploadProfilePicture(
-      File(pickedFile.path), // Convert to File object
+      File(pickedFile.path),
       userProvider.userId
     );
     
-    // Check mounted again after async operation
     if (!mounted) return;
     
     if (success) {
-      // Reload from server to get the actual stored path
-      _loadProfilePicture();
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Profile picture updated!', style: text),
-          backgroundColor: Colors.green,
-        ),
-      );
+      // 1. First, get the NEW image path from server
+      String? newImagePath = await ApiService.getProfilePicture(userProvider.userId);
+      await ImageCacheService.clearCache();
+      if (newImagePath != null && mounted) {
+        // 2. Cache the new image immediately
+        final serverUrl = 'http://38.242.246.126:3000/$newImagePath';
+        await ImageCacheService.cacheNetworkImage(serverUrl);
+        
+        // 3. Update provider with new path
+        userProvider.updateProfilePicture(newImagePath);
+        
+        // 4. Force UI refresh
+        setState(() {});
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Profile picture updated!', style: text),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -114,18 +125,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     }
-  }
-}
-
-  ImageProvider _getProfileImage(String imagePath) {
-  print('🖼️ Loading image: $imagePath');
-  
-  // ALWAYS use NetworkImage for server paths
-  if (imagePath.startsWith('uploads/') || imagePath.contains('profile-')) {
-    return NetworkImage('http://38.242.246.126:3000/$imagePath');
-  } else {
-    // Only use AssetImage for actual local assets
-    return AssetImage(imagePath);
   }
 }
 
@@ -170,10 +169,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Consumer<UserProvider>(
                           builder: (context, userProvider, child) {
-                            return CircleAvatar(
-                            radius: 60,
-                            backgroundImage: _getProfileImage(userProvider.profilePicture),
-                          );
+                            return ImageUtils.buildCachedProfileImage(
+                              userProvider.profilePicture,
+                              60
+                            );
                           },
                         ),
                         Positioned(

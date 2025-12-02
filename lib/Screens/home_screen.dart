@@ -11,6 +11,7 @@ import 'package:pick_my_dish/Screens/favorite_screen.dart';
 import 'package:pick_my_dish/Screens/profile_screen.dart';
 import 'package:pick_my_dish/Screens/recipe_screen.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:pick_my_dish/utils/image_utils.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -126,19 +127,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  ImageProvider _getProfileImage(String imagePath) {
-  print('🖼️ Loading image: $imagePath');
-  
-  // ALWAYS use NetworkImage for server paths
-  if (imagePath.startsWith('uploads/') || imagePath.contains('profile-')) {
-    return NetworkImage('http://38.242.246.126:3000/$imagePath');
-  } else {
-    // Only use AssetImage for actual local assets
-    return AssetImage(imagePath);
-  }
-}
-
 
   Widget _buildPersonalizedRecipeCard(Map<String, dynamic> recipe) {
     List<String> ingredients = List<String>.from(
@@ -638,17 +626,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   children: [
                     Consumer<UserProvider>(
-                          builder: (context, userProvider, child) {
-                            return Consumer<UserProvider>(
-                          builder: (context, userProvider, child) {
-                            return CircleAvatar(
-                            radius: 60,
-                            backgroundImage: _getProfileImage(userProvider.profilePicture),
-                          );
-                          },
-                        );
-                          },
-                        ),
+                    builder: (context, userProvider, child) {
+                      return ImageUtils.buildCachedProfileImage(
+                        userProvider.profilePicture,
+                        60
+                      );
+                    },
+                  ),
                     const SizedBox(width: 25),
                      Consumer<UserProvider>(
                         builder: (context, userProvider, child) {
