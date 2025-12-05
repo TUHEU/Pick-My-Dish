@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pick_my_dish/Models/recipe_model.dart';
 import 'package:pick_my_dish/constants.dart';
 
 class RecipeDetailScreen extends StatelessWidget {
-  final Map<String, dynamic> recipe;
+  final Recipe recipe;
 
   const RecipeDetailScreen({super.key, required this.recipe});
 
@@ -18,7 +19,7 @@ class RecipeDetailScreen extends StatelessWidget {
             stretch: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.asset(
-                recipe['image'] ?? 'assets/recipes/test.png',
+                recipe.imagePath,
                 fit: BoxFit.cover,
               ),
             ),
@@ -35,7 +36,7 @@ class RecipeDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20, right: 20),
                 child: IconButton(
                   icon: Icon(
-                    recipe['isFavorite'] == true ? Icons.favorite : Icons.favorite_border,
+                    recipe.isFavorite == true ? Icons.favorite : Icons.favorite_border,
                     color: Colors.orange,
                     size: 30,
                   ),
@@ -63,12 +64,12 @@ class RecipeDetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              recipe['name'] ?? 'Recipe Name',
+                              recipe.name,
                               style: title.copyWith(fontSize: 28),
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              recipe['category'] ?? 'Category',
+                              recipe.category,
                               style: categoryText.copyWith(fontSize: 18),
                             ),
                           ],
@@ -87,7 +88,7 @@ class RecipeDetailScreen extends StatelessWidget {
                             const Icon(Icons.access_time, color: Colors.white, size: 16),
                             const SizedBox(width: 5),
                             Text(
-                              recipe['time'] ?? '30 mins',
+                              recipe.cookingTime,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -116,7 +117,7 @@ class RecipeDetailScreen extends StatelessWidget {
                         const Icon(Icons.local_fire_department, color: Colors.orange, size: 20),
                         const SizedBox(width: 8),
                         Text(
-                          '${recipe['calories'] ?? '0'} Calories',
+                          '${recipe.calories} Calories',
                           style: mediumtitle.copyWith(fontSize: 18),
                         ),
                       ],
@@ -139,8 +140,7 @@ class RecipeDetailScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (recipe['ingredients'] != null)
-                          ...List<String>.from(recipe['ingredients']).map(
+                          ...List<String>.from(recipe.ingredients).map(
                             (ingredient) => Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Row(
@@ -177,8 +177,7 @@ class RecipeDetailScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (recipe['steps'] != null)
-                          ...List<String>.from(recipe['steps']).asMap().entries.map(
+                          ...List<String>.from(recipe.steps).asMap().entries.map(
                             (entry) => Padding(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               child: Row(
@@ -220,13 +219,13 @@ class RecipeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 30),
 
                   // Mood Tags
-                  if (recipe['mood'] != null) ...[
+                   ...[
                     Text("Perfect For", style: mediumtitle),
                     const SizedBox(height: 15),
                     Wrap(
                       spacing: 10,
                       runSpacing: 10,
-                      children: List<String>.from(recipe['mood']).map(
+                      children: List<String>.from(recipe.moods).map(
                         (mood) => Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(

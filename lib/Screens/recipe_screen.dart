@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pick_my_dish/Models/recipe_model.dart';
+import 'package:pick_my_dish/Providers/recipe_provider.dart'; // Add this
 import 'package:pick_my_dish/Screens/favorite_screen.dart';
 import 'package:pick_my_dish/Screens/recipe_upload_screen.dart';
 import 'package:pick_my_dish/Services/api_service.dart';
 import 'package:pick_my_dish/constants.dart';
 import 'package:pick_my_dish/Screens/recipe_detail_screen.dart';
 import 'package:pick_my_dish/widgets/cached_image.dart';
-import 'package:pick_my_dish/widgets/cached_image.dart'; // Add this
+import 'package:provider/provider.dart'; // Add this
 
 class RecipesScreen extends StatefulWidget {
   const RecipesScreen({super.key});
@@ -15,7 +17,7 @@ class RecipesScreen extends StatefulWidget {
 }
 
 class RecipesScreenState extends State<RecipesScreen> {
-  List<Map<String, dynamic>> allRecipes = [];
+  List<Recipe> allRecipes = [];
   bool isLoading = true;
   bool hasError = false;
 
@@ -31,7 +33,9 @@ class RecipesScreenState extends State<RecipesScreen> {
 
   Future<void> _loadRecipes() async {
     try {
-      final recipes = await ApiService.getRecipes();
+      final recipeMaps = await ApiService.getRecipes(); // This returns List<Map>
+      final recipes = recipeMaps.map((map) => Recipe.fromJson(map)).toList();
+      
       setState(() {
         allRecipes = recipes;
         isLoading = false;
@@ -52,15 +56,15 @@ class RecipesScreenState extends State<RecipesScreen> {
     });
   }
 
-  List<Map<String, dynamic>> get filteredRecipes {
+  List<Recipe> get filteredRecipes {
     if (searchQuery.isEmpty) return allRecipes;
     return allRecipes.where((recipe) {
-      return recipe['name']?.toLowerCase().contains(searchQuery) ?? false ||
-          recipe['category']?.toLowerCase().contains(searchQuery) ?? false;
+      return recipe.name.toLowerCase().contains(searchQuery) ||
+          recipe.category.toLowerCase().contains(searchQuery);
     }).toList();
   }
 
-  void _showRecipeDetails(Map<String, dynamic> recipe) {
+  void _showRecipeDetails(Recipe recipe) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -245,7 +249,7 @@ class RecipesScreenState extends State<RecipesScreen> {
     );
   }
 
-  Widget buildRecipeCard(Map<String, dynamic> recipe) {
+  Widget buildRecipeCard(Recipe recipe) {
     return GestureDetector(
       onTap: () => _showRecipeDetails(recipe),
       child: Container(
@@ -263,7 +267,7 @@ class RecipesScreenState extends State<RecipesScreen> {
                 width: 99,
                 height: 87,
                 child: CachedProfileImage(
-                  imagePath: recipe['image_path'] ?? 'assets/recipes/test.png',
+                  imagePath: recipe.imagePath, // Use Recipe property
                   radius: 0,
                   isProfilePicture: false,
                   width: 99,
@@ -282,7 +286,7 @@ class RecipesScreenState extends State<RecipesScreen> {
                   _toggleFavorite(recipe);
                 },
                 child: Icon(
-                  (recipe['isFavorite'] == true) ? Icons.favorite : Icons.favorite_border,
+                  recipe.isFavorite ? Icons.favorite : Icons.favorite_border, // Use Recipe property
                   color: Colors.orange,
                   size: iconSize,
                 ),
@@ -298,7 +302,7 @@ class RecipesScreenState extends State<RecipesScreen> {
                 children: [
                   // Category
                   Text(
-                    recipe['category'] ?? 'Uncategorized',
+                    recipe.category, // Use Recipe property
                     style: categoryText.copyWith(
                       color: Color(0xFF2958FF),
                       fontSize: 15,
@@ -308,7 +312,7 @@ class RecipesScreenState extends State<RecipesScreen> {
 
                   // Recipe Name
                   Text(
-                    recipe['name'] ?? 'Unknown Recipe',
+                    recipe.name, // Use Recipe property
                     style: text.copyWith(fontSize: 17),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -321,7 +325,7 @@ class RecipesScreenState extends State<RecipesScreen> {
                       Icon(Icons.access_time, color: Colors.white, size: 16),
                       SizedBox(width: 5),
                       Text(
-                        recipe['cooking_time'] ?? '0 mins',
+                        recipe.cookingTime, // Use Recipe property
                         style: TextStyle(
                           color: Colors.orange,
                           fontSize: 13,
@@ -340,14 +344,24 @@ class RecipesScreenState extends State<RecipesScreen> {
     );
   }
 
-  void _toggleFavorite(Map<String, dynamic> recipe) {
-    // Add favorite logic to API
-    // For now, just update UI
+  void _toggleFavorite(Recipe recipe) {
+    // Get RecipeProvider
+    final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
+    
+    // Update in provider
+    recipeProvider.toggleFavorite(recipe.id);
+    
+    // Update local UI
     setState(() {
-      recipe['isFavorite'] = !(recipe['isFavorite'] == true);
+      final index = allRecipes.indexWhere((r) => r.id == recipe.id);
+      if (index != -1) {
+        allRecipes[index] = allRecipes[index].copyWith(
+          isFavorite: !allRecipes[index].isFavorite
+        );
+      }
     });
     
     // TODO: Call API to update favorite status in database
-    // ApiService.toggleFavorite(recipe['id'], recipe['isFavorite']);
+    // ApiService.toggleFavorite(recipe.id, recipe.isFavorite);
   }
 }

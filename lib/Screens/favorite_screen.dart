@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pick_my_dish/Providers/favorite_provider.dart';
-import 'package:pick_my_dish/Screens/recipe_screen.dart';
+import 'package:pick_my_dish/Models/recipe_model.dart';
+import 'package:pick_my_dish/Providers/recipe_provider.dart';
 import 'package:pick_my_dish/Screens/recipe_detail_screen.dart';
 import 'package:pick_my_dish/constants.dart';
 import 'package:provider/provider.dart';
@@ -10,17 +10,14 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final favoritesProvider = Provider.of<FavoriteProvider>(context);
-    final recipesScreenState = context.findAncestorStateOfType<RecipesScreenState>();
-    
-    final favoriteRecipes = recipesScreenState?.allRecipes
-        .where((recipe) => favoritesProvider.isFavorite(recipe['id']))
-        .toList() ?? [];
-    void _showRecipeDetails(Map<String, dynamic> recipe) {
+    final recipeProvider = Provider.of<RecipeProvider>(context);
+    final favoriteRecipes = recipeProvider.favorites;
+
+    void _showRecipeDetails(Recipe recipe) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RecipeDetailScreen(recipe: recipe),
+          builder: (context) => RecipeDetailScreen(recipe: recipe), // Convert to Map for compatibility
         ),
       );
     }
@@ -61,13 +58,14 @@ class FavoritesScreen extends StatelessWidget {
                     : ListView.builder(
                         itemCount: favoriteRecipes.length,
                         itemBuilder: (context, index) {
+                          final recipe = favoriteRecipes[index];
                           return GestureDetector(
                             onTap: () {
-                              _showRecipeDetails(favoriteRecipes[index]);
+                              _showRecipeDetails(recipe);
                             },
                             child: Container(
                               margin: EdgeInsets.only(bottom: 15),
-                              child: _buildRecipeCard(favoriteRecipes[index]),
+                              child: _buildRecipeCard(recipe),
                             ),
                           );
                         },
@@ -80,7 +78,7 @@ class FavoritesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecipeCard(Map<String, dynamic> recipe) {
+  Widget _buildRecipeCard(Recipe recipe) {
     return Container(
       height: 64,
       decoration: BoxDecoration(
@@ -107,7 +105,7 @@ class FavoritesScreen extends StatelessWidget {
                 color: Colors.grey,
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                  image: AssetImage(recipe['image']),
+                  image: AssetImage(recipe.imagePath), // Use Recipe model property
                   fit: BoxFit.cover,
                 ),
               ),
@@ -119,7 +117,7 @@ class FavoritesScreen extends StatelessWidget {
             left: 100,
             top: 13,
             child: Text(
-              recipe['name'],
+              recipe.name, // Use Recipe model property
               style: TextStyle(
                 fontFamily: 'Lora',
                 fontSize: 17.5,
@@ -138,7 +136,7 @@ class FavoritesScreen extends StatelessWidget {
                 Icon(Icons.access_time, color: Colors.orange, size: 12),
                 SizedBox(width: 5),
                 Text(
-                  recipe['time'],
+                  recipe.cookingTime, // Use Recipe model property
                   style: TextStyle(
                     fontFamily: 'Lora',
                     fontSize: 9.7,

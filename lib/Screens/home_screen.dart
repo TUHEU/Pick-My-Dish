@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pick_my_dish/Models/recipe_model.dart';
 import 'package:pick_my_dish/Providers/user_provider.dart';
 import 'package:pick_my_dish/Screens/login_screen.dart';
 import 'package:pick_my_dish/Screens/recipe_detail_screen.dart';
@@ -57,47 +58,55 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> timeOptions = ['15 mins', '30 mins', '1 hour', '2+ hours'];
 
   final DatabaseService _databaseService = DatabaseService();
-  List<Map<String, dynamic>> personalizedRecipes = [];
+  List<Recipe> personalizedRecipes = [];
   bool showPersonalizedResults = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _generateRecipes() async {
-    if (selectedIngredients.isEmpty &&
-        selectedEmotion == null &&
-        selectedTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select at least one filter', style: text),
-          backgroundColor: Colors.orange,
-        ),
-      );
-      return;
-    }
-
-    try {
-      final recipes = await _databaseService.getFilteredRecipes(
-        ingredients: selectedIngredients,
-        mood: selectedEmotion,
-        time: selectedTime,
-      );
-
-      setState(() {
-        personalizedRecipes = recipes;
-        showPersonalizedResults = true;
-      });
-
-      _showPersonalizedResults(recipes);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error generating recipes: $e', style: text),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+  if (selectedIngredients.isEmpty &&
+      selectedEmotion == null &&
+      selectedTime == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Please select at least one filter', style: text),
+        backgroundColor: Colors.orange,
+      ),
+    );
+    return;
   }
 
+  try {
+    // Get the Map results WITH FILTERS
+    final dynamic result = await _databaseService.getFilteredRecipes(
+      ingredients: selectedIngredients,
+      mood: selectedEmotion,
+      time: selectedTime,
+    );
+    
+    // Convert to Recipe objects
+    final List<Recipe> recipes = (result as List).map((item) {
+      if (item is Recipe) return item; // Already Recipe
+      if (item is Map) return Recipe.fromJson(Map<String, dynamic>.from(item));
+      return Recipe.fromJson({});
+    }).toList();
+
+    setState(() {
+      personalizedRecipes = recipes;
+      showPersonalizedResults = true;
+    });
+
+    _showPersonalizedResults(recipes);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error generating recipes: $e', style: text),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
+  
   void _logout() async {
     // 1. Clear all user data from provider
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -113,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _showPersonalizedResults(List<Map<String, dynamic>> recipes) {
+  void _showPersonalizedResults(List<Recipe> recipes) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -145,11 +154,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPersonalizedRecipeCard(Map<String, dynamic> recipe) {
+  Widget _buildPersonalizedRecipeCard(Recipe recipe) {
     List<String> ingredients = List<String>.from(
-      json.decode(recipe['ingredients']),
+      recipe.ingredients,
     );
-    List<String> moods = List<String>.from(json.decode(recipe['mood']));
+    List<String> moods = List<String>.from(recipe.moods);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -164,13 +173,13 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             image: DecorationImage(
-              image: AssetImage(recipe['image']),
+              image: AssetImage(recipe.imagePath),
               fit: BoxFit.cover,
             ),
           ),
         ),
         title: Text(
-          recipe['name'],
+          recipe.name,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -180,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Time: ${recipe['time']}',
+              'Time: ${recipe.cookingTime}',
               style: const TextStyle(color: Colors.orange),
             ),
             Text(
@@ -202,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showRecipeDetails(Map<String, dynamic> recipe) {
+  void _showRecipeDetails(Recipe recipe) {
     // Navigate to Recipe Detail Screen
     Navigator.push(
       context,
@@ -387,28 +396,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: 3,
                       itemBuilder: (context, index) {
-                        final recipe = {
-                          'name': 'Sample Recipe ${index + 1}',
-                          'time': '${15 + index * 10} mins',
-                          'image': 'assets/recipes/test.png',
-                          'isFavorite': false,
-                          'category': 'Main Course',
-                          'calories': '${300 + index * 100}',
-                          'ingredients': [
-                            'Ingredient 1',
-                            'Ingredient 2',
-                            'Ingredient 3'
-                          ],
-                          'steps': [
+                        // Create Recipe object instead of Map
+                        final recipe = Recipe(
+                          id: index + 1000, // Temporary ID
+                          name: 'Sample Recipe ${index + 1}',
+                          cookingTime: '${15 + index * 10} mins',
+                          imagePath: 'assets/recipes/test.png',
+                          isFavorite: false,
+                          category: 'Main Course',
+                          calories: '${300 + index * 100}',
+                          ingredients: ['Ingredient 1', 'Ingredient 2', 'Ingredient 3'],
+                          steps: [
                             'Step 1: Prepare ingredients',
                             'Step 2: Cook according to instructions',
                             'Step 3: Serve hot'
                           ],
-                          'mood': ['Comfort', 'Healthy']
-                        };
+                          moods: ['Comfort', 'Healthy'], // Note: 'moods' (plural) not 'mood'
+                          userId: 1, // Default user ID
+                        );
                         return Column(
                           children: [
-                            buildRecipeCard(recipe),
+                            buildRecipeCard(recipe), // Now passes Recipe object
                             const SizedBox(height: 20),
                           ],
                         );
@@ -549,7 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildRecipeCard(Map<String, dynamic> recipe) {
+  Widget buildRecipeCard(Recipe recipe) {
     return GestureDetector(
       onTap: () {
         _showRecipeDetails(recipe);
@@ -579,7 +587,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: AssetImage(recipe['image']),
+                    image: AssetImage(recipe.imagePath),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -591,7 +599,7 @@ class _HomeScreenState extends State<HomeScreen> {
               left: 100,
               top: 13,
               child: Text(
-                recipe['name'],
+                recipe.name,
                 style: const TextStyle(
                   fontFamily: 'Lora',
                   fontSize: 17.5,
@@ -610,7 +618,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Icon(Icons.access_time, color: Colors.white, size: 16),
                   const SizedBox(width: 5),
                   Text(
-                    recipe['time'],
+                    recipe.cookingTime,
                     style: const TextStyle(
                       fontFamily: 'Lora',
                       fontSize: 12,
@@ -631,7 +639,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Toggle favorite logic
                 },
                 child: Icon(
-                  recipe['isFavorite'] ? Icons.favorite : Icons.favorite_border,
+                  recipe.isFavorite ? Icons.favorite : Icons.favorite_border,
                   color: Colors.orange,
                   size: 25,
                 ),
