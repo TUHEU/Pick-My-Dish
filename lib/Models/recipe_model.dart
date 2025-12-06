@@ -27,34 +27,36 @@ class Recipe {
   });
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
-  // Helper function to safely parse JSON strings
-  List<String> parseList(dynamic data) {
-    if (data == null) return [];
-    if (data is List) return List<String>.from(data);
-    if (data is String) {
-      try {
-        return List<String>.from(jsonDecode(data));
-      } catch (e) {
-        return [];
+    // Helper function
+    List<String> parseBackendData(dynamic data) {
+      if (data == null) return [];
+      if (data is List) return List<String>.from(data);
+      if (data is String) {
+        try {
+          final parsed = jsonDecode(data);
+          if (parsed is List) return List<String>.from(parsed);
+          return [];
+        } catch (e) {
+          return [];
+        }
       }
+      return [];
     }
-    return [];
+    
+    return Recipe(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      category: json['category_name'] ?? json['category'] ?? 'Main Course',
+      cookingTime: json['cooking_time'] ?? json['time'] ?? '30 mins',
+      calories: json['calories']?.toString() ?? '0',
+      imagePath: json['image_path'] ?? json['image'] ?? 'assets/recipes/test.png',
+      ingredients: parseBackendData(json['ingredients_names']),
+      steps: parseBackendData(json['steps'] ?? json['instructions']),
+      moods: parseBackendData(json['emotions'] ?? json['mood']),
+      userId: json['user_id'] ?? json['userId'] ?? 0,
+      isFavorite: json['isFavorite'] ?? false,
+    );
   }
-
-  return Recipe(
-    id: json['id'] ?? 0,
-    name: json['name'] ?? '',
-    category: json['category'] ?? 'Uncategorized',
-    cookingTime: json['time'] ?? json['cooking_time'] ?? '0 mins',
-    calories: json['calories']?.toString() ?? '0',
-    imagePath: json['image_path'] ?? json['image'] ?? 'assets/recipes/test.png',
-    ingredients: parseList(json['ingredients']),
-    steps: parseList(json['steps']),
-    moods: parseList(json['mood'] ?? json['emotions']),
-    userId: json['user_id'] ?? 0,
-    isFavorite: json['isFavorite'] ?? false,
-  );
-}
   Recipe copyWith({
     int? id,
     String? name,

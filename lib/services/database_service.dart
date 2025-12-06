@@ -118,7 +118,7 @@ class DatabaseService {
       calories: map['calories']?.toString() ?? '0',
       imagePath: map['image'] ?? 'assets/recipes/test.png',
       ingredients: List<String>.from(json.decode(map['ingredients'] ?? '[]')),
-      steps: List<String>.from(json.decode(map['steps'] ?? '[]')),
+      steps: List<String>.from(json.decode(map['instructions'] ?? map['steps'] ??  '[]')),
       moods: List<String>.from(json.decode(map['mood'] ?? '[]')),
       userId: 1, // Default for local DB
       isFavorite: (map['isFavorite'] ?? 0) == 1,

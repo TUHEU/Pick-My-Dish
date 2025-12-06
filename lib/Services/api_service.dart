@@ -166,10 +166,12 @@ static Future<String?> getProfilePicture(int userId) async {
 static Future<List<Map<String, dynamic>>> getRecipes() async {
   try {
     final response = await http.get(
-      Uri.parse('$baseUrl/api/recipes/with-category'),
+      Uri.parse('$baseUrl/api/recipes'),
       headers: {'Content-Type': 'application/json'},
     );
     
+    debugPrint('📡 Recipes endpoint: ${response.statusCode}'); 
+    debugPrint('📡 Response body: ${response.body}');
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return List<Map<String, dynamic>>.from(data['recipes'] ?? []);
