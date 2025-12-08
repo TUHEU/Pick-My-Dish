@@ -198,8 +198,13 @@ static Future<bool> uploadRecipe(Map<String, dynamic> recipeData, File? imageFil
       request.fields['ingredients'] = json.encode(recipeData['ingredients']);
       request.fields['instructions'] = json.encode(recipeData['instructions']);
       request.fields['userId'] = recipeData['userId'].toString();
-      request.fields['moods'] = json.encode(recipeData['moods']);
       
+      final emotions = recipeData['emotions'] ?? [];
+      request.fields['emotions'] = json.encode(emotions);
+      
+      print('📤 Sending emotions: $emotions');
+      print('📤 Encoded emotions: ${json.encode(emotions)}');
+
       // Add image if exists
       if (imageFile != null) {
         request.files.add(

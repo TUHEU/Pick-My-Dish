@@ -53,8 +53,12 @@ class _RecipeUploadScreenState extends State<RecipeUploadScreen> {
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 800,
+      maxHeight: 800,
+      imageQuality: 85, // Add compression
+    );
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
@@ -91,8 +95,12 @@ class _RecipeUploadScreenState extends State<RecipeUploadScreen> {
     'ingredients': _selectedIngredientIds,
     'instructions': _stepsController.text.split('\n'),
     'userId': userProvider.userId,
-    'moods': _selectedEmotions, 
+    'emotions': _selectedEmotions, 
   };
+  
+    // ADD THIS DEBUG LINE
+  print('📤 Uploading recipe with moods: $_selectedEmotions');
+  print('📤 Recipe data: $recipeData');
   
   // Show loading
   showDialog(
