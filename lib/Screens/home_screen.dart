@@ -413,6 +413,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                           moods: ['Comfort', 'Healthy'], // Note: 'moods' (plural) not 'mood'
                           userId: 1, // Default user ID
+                          authorName: 'Unknown',
                         );
                         return Column(
                           children: [

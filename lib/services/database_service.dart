@@ -113,6 +113,7 @@ class DatabaseService {
     return Recipe(
       id: map['id'] ?? 0,
       name: map['name'] ?? '',
+      authorName: map['authornName'] ?? '',
       category: map['category'] ?? '',
       cookingTime: map['time'] ?? 'cooking_time' ?? '',
       calories: map['calories']?.toString() ?? '0',

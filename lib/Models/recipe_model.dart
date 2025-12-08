@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class Recipe {
   final int id;
   final String name;
+  final String authorName;
   final String category;
   final String cookingTime;
   final String calories;
@@ -17,6 +18,7 @@ class Recipe {
   Recipe({
     required this.id,
     required this.name,
+    required this.authorName,
     required this.category,
     required this.cookingTime,
     required this.calories,
@@ -59,6 +61,7 @@ class Recipe {
     return Recipe(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
+      authorName: json['author_name'] ?? '',
       category: json['category_name'] ?? json['category'] ?? 'Main Course',
       cookingTime: json['cooking_time'] ?? json['time'] ?? '30 mins',
       calories: json['calories']?.toString() ?? '0',
@@ -73,6 +76,7 @@ class Recipe {
   Recipe copyWith({
     int? id,
     String? name,
+    String? authorName,
     String? category,
     String? cookingTime,
     String? calories,
@@ -86,6 +90,7 @@ class Recipe {
     return Recipe(
       id: id ?? this.id,
       name: name ?? this.name,
+      authorName: authorName ?? this.authorName,
       category: category ?? this.category,
       cookingTime: cookingTime ?? this.cookingTime,
       calories: calories ?? this.calories,
@@ -102,6 +107,7 @@ class Recipe {
     return {
       'id': id,
       'name': name,
+      'authorName': authorName,
       'category': category,
       'time': cookingTime,
       'calories': calories,

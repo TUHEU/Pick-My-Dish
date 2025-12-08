@@ -92,10 +92,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                               recipe.name,
                               style: title.copyWith(fontSize: 28),
                             ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'By ${recipe.authorName}',
+                              style: TextStyle(color: Colors.white70, fontSize: 16),
+                            ),
                             const SizedBox(height: 8),
                             Text(
                               recipe.category,
-                              style: categoryText.copyWith(fontSize: 18),
+                              style: categoryText.copyWith(fontSize: 18, color: Colors.blueAccent),
                             ),
                           ],
                         ),
