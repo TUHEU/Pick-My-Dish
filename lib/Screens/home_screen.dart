@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Quick',
     'Light',
   ];
-  List<String> timeOptions = ['< 15mins', '< 30mins', '< 1hour', '< 1hour 30mins', '2+ hours'];
+  List<String> timeOptions = ['<= 15mins', '<= 30mins', '<= 1hour', '<= 1hour 30mins', '2+ hours'];
   List<Map<String, dynamic>> allIngredients = [];
 
   final DatabaseService _databaseService = DatabaseService();
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _generateRecipes() async {
+  void _generatePersonalisedRecipes() async {
   if (selectedIngredients.isEmpty &&
       selectedEmotion == null &&
       selectedTime == null) {
@@ -486,24 +486,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     _buildPersonalizationSection(),
                     const SizedBox(height: 30),
 
-                    // Personalized Results (if any)
-                    if (showPersonalizedResults &&
-                        personalizedRecipes.isNotEmpty) ...[
-                      Text("Personalized For You", style: mediumtitle),
-                      const SizedBox(height: 10),
-                      ...personalizedRecipes
-                          .take(3)
-                          .map(
-                            (recipe) => Column(
-                              children: [
-                                _buildPersonalizedRecipeCard(recipe),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
-                          ),
-                      const SizedBox(height: 20),
-                    ],
-
                     // Today's Fresh Recipe
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -654,7 +636,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _generateRecipes,
+              onPressed: _generatePersonalisedRecipes,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 padding: const EdgeInsets.symmetric(vertical: 15),
