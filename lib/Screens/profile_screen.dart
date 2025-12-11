@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String? imagePath = await ApiService.getProfilePicture(userProvider.userId);
     
     // Check mounted BEFORE updating UI
-    if (mounted && imagePath != null) {
+    if (mounted && imagePath != null && imagePath.isNotEmpty) {
       userProvider.updateProfilePicture(imagePath);
       setState(() {});
     }

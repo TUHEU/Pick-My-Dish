@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Quick',
     'Light',
   ];
-  List<String> timeOptions = ['15 mins', '30 mins','45 mins', '1 hour', '1 hour 15 mins', '1 hour 30 mins', '2+ hours'];
+  List<String> timeOptions = ['< 15mins', '< 30mins', '< 1hour', '< 1hour 30mins', '2+ hours'];
   List<Map<String, dynamic>> allIngredients = [];
 
   final DatabaseService _databaseService = DatabaseService();
@@ -147,17 +147,44 @@ class _HomeScreenState extends State<HomeScreen> {
   
   // Helper method to parse time strings to minutes
   int _parseTimeToMinutes(String time) {
-    if (time.toLowerCase().contains('min')) {
-      final matches = RegExp(r'(\d+)').firstMatch(time);
-      if (matches != null) {
-        return int.parse(matches.group(1)!);
-      }
-    } else if (time.toLowerCase().contains('hour')) {
-      final matches = RegExp(r'(\d+)').firstMatch(time);
-      if (matches != null) {
-        return int.parse(matches.group(1)!) * 60;
+    // Remove any spaces and convert to lowercase for consistent parsing
+    String cleanTime = time.toLowerCase().replaceAll(' ', '');
+    
+    // Handle "2+ hours" or similar cases
+    if (cleanTime.contains('+')) {
+      cleanTime = cleanTime.replaceAll('+', '');
+    }
+    
+    // Case 1: Contains "hour" and "min" (e.g., "1hour15mins")
+    if (cleanTime.contains('hour') && cleanTime.contains('min')) {
+      // Extract hours
+      final hourMatch = RegExp(r'(\d+)hour').firstMatch(cleanTime);
+      int hours = hourMatch != null ? int.parse(hourMatch.group(1)!) : 0;
+      
+      // Extract minutes
+      final minMatch = RegExp(r'(\d+)min').firstMatch(cleanTime);
+      int minutes = minMatch != null ? int.parse(minMatch.group(1)!) : 0;
+      
+      return (hours * 60) + minutes;
+    }
+    
+    // Case 2: Contains "hour" only (e.g., "1hour", "2hours")
+    else if (cleanTime.contains('hour')) {
+      final match = RegExp(r'(\d+)hour').firstMatch(cleanTime);
+      if (match != null) {
+        return int.parse(match.group(1)!) * 60;
       }
     }
+    
+    // Case 3: Contains "min" only (e.g., "15mins", "30mins")
+    else if (cleanTime.contains('min')) {
+      final match = RegExp(r'(\d+)min').firstMatch(cleanTime);
+      if (match != null) {
+        return int.parse(match.group(1)!);
+      }
+    }
+    
+    // Return 0 if parsing fails
     return 0;
   }
 
@@ -746,7 +773,7 @@ class _HomeScreenState extends State<HomeScreen> {
     String? imagePath = await ApiService.getProfilePicture(userProvider.userId);
     
     // Check mounted BEFORE updating UI
-    if (mounted && imagePath != null) {
+    if (mounted && imagePath != null && imagePath.isNotEmpty) {
       userProvider.updateProfilePicture(imagePath);
       setState(() {});
     }
