@@ -207,7 +207,7 @@ class RecipeProvider with ChangeNotifier {
   bool canEditRecipe(int recipeId, int userId, bool isAdmin) {
     final recipe = getRecipeById(recipeId);
     if (recipe == null) return false;
-    return isAdmin || recipe.creatorId == userId;
+    return isAdmin || recipe.userId == userId;
   }
 
   bool canDeleteRecipe(int recipeId, int userId, bool isAdmin) {
@@ -237,11 +237,14 @@ class RecipeProvider with ChangeNotifier {
 
   // Delete recipe
   Future<bool> deleteRecipe(int recipeId, int userId) async {
+    debugPrint('📤 RecipeProvider.deleteRecipe called: recipeId=$recipeId, userId=$userId');
     try {
       final success = await ApiService.deleteRecipe(recipeId, userId);
+      debugPrint('📡 ApiService.deleteRecipe response: $success');
       if (success) {
         _recipes.removeWhere((recipe) => recipe.id == recipeId);
         _userFavorites.removeWhere((recipe) => recipe.id == recipeId);
+        debugPrint('✅ Recipe removed from local lists');
         notifyListeners();
       }
       return success;

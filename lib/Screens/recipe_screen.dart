@@ -27,6 +27,7 @@ class RecipesScreenState extends State<RecipesScreen> {
   List<Recipe> allRecipes = [];
   bool isLoading = true;
   bool hasError = false;
+  String header = "All Recipes";
 
   String searchQuery = '';
   TextEditingController searchController = TextEditingController();
@@ -45,8 +46,9 @@ class RecipesScreenState extends State<RecipesScreen> {
       
       // Filter user's recipes if needed
       if (widget.showUserRecipesOnly) {
+        header = "My Recipes";
         final userProvider = Provider.of<UserProvider>(context, listen: false);
-        recipes = recipes.where((recipe) => recipe.creatorId == userProvider.userId).toList();
+        recipes = recipes.where((recipe) => recipe.userId == userProvider.userId).toList();
       }
 
       setState(() {
@@ -160,7 +162,7 @@ class RecipesScreenState extends State<RecipesScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("All Recipes", style: title.copyWith(fontSize: 28)),
+                  Text(header, style: title.copyWith(fontSize: 28)),
                 ],
               ),
               SizedBox(height: 20),

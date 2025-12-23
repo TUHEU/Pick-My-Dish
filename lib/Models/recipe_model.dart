@@ -13,7 +13,6 @@ class Recipe {
   final List<String> steps;
   final List<String> moods;
   final int userId;
-  final int? creatorId; // NEW: track recipe creator
   final bool isFavorite;
   final bool canEdit; // Added: computed property
   final bool canDelete; // Added: computed property
@@ -30,7 +29,6 @@ class Recipe {
     required this.steps,
     required this.moods,
     required this.userId,
-    this.creatorId, // NEW: track recipe creator
     this.isFavorite = false,
     this.canEdit = false,
     this.canDelete = false,
@@ -76,19 +74,18 @@ class Recipe {
       steps: parseBackendData(json['steps'] ?? json['instructions']),
       moods: parseBackendData(json['emotions'] ?? json['mood']),
       userId: json['user_id'] ?? json['userId'] ?? 0,
-      creatorId: json['creator_id'] ?? json['userId'] ?? 0, // NEW: track recipe creator
       isFavorite: json['isFavorite'] ?? false,
     );
   }
 
   // Check if current user can edit this recipe
   bool canUserEdit(int currentUserId, bool isAdmin) {
-    return isAdmin || creatorId == currentUserId;
+    return isAdmin || userId == currentUserId;
   }
 
   // Check if current user can delete this recipe
   bool canUserDelete(int currentUserId, bool isAdmin) {
-    return isAdmin || creatorId == currentUserId;
+    return isAdmin || userId == currentUserId;
   }
 
   Recipe copyWith({
@@ -104,7 +101,6 @@ class Recipe {
     List<String>? moods,
     int? userId,
     bool? isFavorite,
-    int? creatorId,
     bool? canEdit,
     bool? canDelete,
   }) {
@@ -120,7 +116,6 @@ class Recipe {
       steps: steps ?? this.steps,
       moods: moods ?? this.moods,
       userId: userId ?? this.userId,
-      creatorId: creatorId ?? this.creatorId,
       isFavorite: isFavorite ?? this.isFavorite,
       canEdit: canEdit ?? this.canEdit,
       canDelete: canDelete ?? this.canDelete,

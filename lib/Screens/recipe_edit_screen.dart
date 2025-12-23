@@ -92,7 +92,9 @@ class _RecipeEditScreenState extends State<RecipeEditScreen> {
   }
   
   void _updateRecipe() async {
+    debugPrint('🔄 Update button pressed');
     if (_nameController.text.isEmpty) {
+      debugPrint('🔄 Update button pressed');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fill required fields')),
       );
@@ -115,6 +117,18 @@ class _RecipeEditScreenState extends State<RecipeEditScreen> {
       );
       return;
     }
+       
+    debugPrint('📊 Form data:');
+    debugPrint('   Name: ${_nameController.text}');
+    debugPrint('   Category: $_selectedCategory');
+    debugPrint('   Time: $_selectedTime');
+    debugPrint('   Calories: ${_caloriesController.text}');
+    debugPrint('   Emotions: $_selectedEmotions');
+    debugPrint('   Ingredient IDs: $_selectedIngredientIds');
+    debugPrint('   Steps: ${_stepsController.text.split('\n').length} steps');
+    debugPrint('   User ID: ${userProvider.userId}');
+    debugPrint('   Recipe ID: ${widget.recipe.id}');
+    debugPrint('   Image selected: ${_selectedImage != null}');
 
     final recipeData = {
       'name': _nameController.text,
@@ -127,6 +141,8 @@ class _RecipeEditScreenState extends State<RecipeEditScreen> {
       'emotions': _selectedEmotions,
     };
     
+    debugPrint('📤 Sending update request...');
+
     // Show loading
     showDialog(
       context: context,
@@ -135,23 +151,32 @@ class _RecipeEditScreenState extends State<RecipeEditScreen> {
     );
     
     try {
+      debugPrint('🚀 Calling ApiService.updateRecipe...');
       bool success = await ApiService.updateRecipe(
         widget.recipe.id,
         recipeData,
         _selectedImage,
         userProvider.userId
       );
-      
+
+      debugPrint('📡 API Response: $success');
       Navigator.pop(context); // Hide loading
       
       if (success && mounted) {
+        debugPrint('✅ Recipe updated successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Recipe updated successfully!')),
         );
         Navigator.pop(context); // Go back
+      } else {
+        debugPrint('❌ Recipe update failed.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Update failed. Please try again.')),
+        );
       }
     } catch (e) {
       Navigator.pop(context);
+      debugPrint('🔥 Exception during update: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Update failed: $e')),
       );

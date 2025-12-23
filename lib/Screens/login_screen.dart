@@ -91,6 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       } else {
         // Login failed
+        // Hide loading
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Invalid email or password', style: text),

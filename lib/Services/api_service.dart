@@ -372,31 +372,65 @@ static Future<List<Map<String, dynamic>>> getUserRecipes(int userId) async {
 
 // Update recipe with ownership check
 static Future<bool> updateRecipe(
-    int recipeId,
-    Map<String, dynamic> recipeData,
-    File? imageFile,
-    int userId
-  ) async {
-    try {
-      var request = http.MultipartRequest(
-        'PUT', 
-        Uri.parse('$baseUrl/api/recipes/$recipeId')
+  int recipeId,
+  Map<String, dynamic> recipeData,
+  File? imageFile,
+  int userId
+) async {
+  debugPrint('📤 API: updateRecipe called');
+  debugPrint('   Recipe ID: $recipeId');
+  debugPrint('   User ID: $userId');
+  debugPrint('   Data: $recipeData');
+  debugPrint('   Has image: ${imageFile != null}');
+  
+  try {
+    var request = http.MultipartRequest(
+      'PUT', 
+      Uri.parse('$baseUrl/api/recipes/$recipeId')
+    );
+    
+    // Add recipe data
+    request.fields['userId'] = userId.toString();
+    request.fields['name'] = recipeData['name'];
+    request.fields['category'] = recipeData['category'];
+    request.fields['time'] = recipeData['time'];
+    request.fields['calories'] = recipeData['calories'];
+    request.fields['ingredients'] = json.encode(recipeData['ingredients']);
+    request.fields['instructions'] = json.encode(recipeData['instructions']);
+    
+    final emotions = recipeData['emotions'] ?? [];
+    request.fields['emotions'] = json.encode(emotions);
+    
+    debugPrint('📤 Fields:');
+    request.fields.forEach((key, value) {
+      debugPrint('   $key: $value');
+    });
+    
+    // Add image if exists
+    if (imageFile != null) {
+      debugPrint('📸 Adding image file: ${imageFile.path}');
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path)
       );
-      
-      // Add user ID for ownership verification
-      request.fields['userId'] = userId.toString();
-      // ... rest of the fields ...
-      
-      var response = await request.send();
-      return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('❌ Error updating recipe: $e');
-      return false;
     }
+
+    debugPrint('🚀 Sending request to: $baseUrl/api/recipes/$recipeId');
+    var response = await request.send();
+    var responseBody = await response.stream.bytesToString();
+    
+    debugPrint('📡 Update response status: ${response.statusCode}');
+    debugPrint('📡 Update response body: $responseBody');
+    
+    return response.statusCode == 200;
+  } catch (e) {
+    debugPrint('❌ Error updating recipe: $e');
+    return false;
   }
+}
 
 // Delete recipe with ownership check
 static Future<bool> deleteRecipe(int recipeId, int userId) async {
+    debugPrint('📤 API: deleteRecipe called - recipeId: $recipeId, userId: $userId');
     try {
       final response = await http.delete(
         Uri.parse('$baseUrl/api/recipes/$recipeId'),

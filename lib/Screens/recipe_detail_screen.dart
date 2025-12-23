@@ -39,6 +39,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     // Check if user can edit/delete
     final canEdit = recipe.canUserEdit(userProvider.userId, isAdmin);
     final canDelete = recipe.canUserDelete(userProvider.userId, isAdmin);
+    
+    print('🔍 Recipe Detail Screen:');
+    print('   Recipe ID: ${recipe.id}');
+    print('   Recipe userId (creator): ${recipe.userId}');
+    print('   Current user ID: ${userProvider.userId}');
+    print('   Is admin: $isAdmin');
+    print('   Can edit: $canEdit');
+    print('   Can delete: $canDelete');
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: CustomScrollView(
@@ -401,10 +410,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       ),
     );
 
+    debugPrint('✅ Dialog result: $confirmed');
+
     if (confirmed == true) {
+      debugPrint('🚀 Calling deleteRecipe API...');
       final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
       final success = await recipeProvider.deleteRecipe(recipe.id, userId);
       
+      debugPrint('📡 API Response: $success');
+
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -423,4 +437,5 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       }
     }
   }
+
 }
