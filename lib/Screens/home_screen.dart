@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final DatabaseService _databaseService = DatabaseService();
   List<Recipe> personalizedRecipes = [];
   bool showPersonalizedResults = false;
+  bool _isLoading = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -210,12 +211,39 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _loadFavorites() async {
+    if (_isLoading || !mounted) return;
+    
+    setState(() => _isLoading = true);
+    
+    final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    
+    if (userProvider.userId == 0) {
+      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+    
+    try {
+      // Add delay to avoid build conflicts
+      await Future.delayed(const Duration(milliseconds: 10));
+      await recipeProvider.loadUserFavorites(userProvider.userId);
+    } catch (e) {
+      debugPrint('Error loading favorites: $e');
+    }
+    
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
+  }
+  
   @override
   void initState() {
     super.initState();
     _loadTodayRecipes();
     _loadIngredients();
-
+      _loadFavorites();
+    
     //Load all recipes into RecipeProvider
   //   WidgetsBinding.instance.addPostFrameCallback((_) {
   //   final recipeProvider = Provider.of<RecipeProvider>(context, listen: false);

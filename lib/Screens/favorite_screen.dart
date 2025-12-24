@@ -43,6 +43,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       setState(() => _isLoading = false);
     }
   }
+  
   @override
   void initState() {
     super.initState();

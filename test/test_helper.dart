@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pick_my_dish/Providers/recipe_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pick_my_dish/Providers/user_provider.dart';
 import 'package:pick_my_dish/Screens/recipe_screen.dart';
@@ -34,10 +35,13 @@ Widget createTestableWidget(Widget child) {
   
 }
 
+// test_helper.dart
 Widget wrapWithProviders(Widget child) {
   return MultiProvider(
     providers: [
+      ChangeNotifierProvider(create: (_) => RecipeProvider()),
       ChangeNotifierProvider(create: (_) => UserProvider()),
+      // Add any other providers your app needs
     ],
     child: MaterialApp(
       home: child,
