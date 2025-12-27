@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pick_my_dish/Models/recipe_model.dart';
 import 'package:pick_my_dish/Providers/recipe_provider.dart';
 import 'package:pick_my_dish/Providers/user_provider.dart';
+import 'package:pick_my_dish/Screens/about_us_screen.dart';
 import 'package:pick_my_dish/Screens/login_screen.dart';
 import 'package:pick_my_dish/Screens/recipe_detail_screen.dart';
 import 'package:pick_my_dish/Screens/recipe_upload_screen.dart';
@@ -921,8 +922,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }),
                 const SizedBox(height: 20),
-                _buildMenuItem(Icons.help, "Help", () {
+                _buildMenuItem(Icons.help, "About Us", () {
                   Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AboutUsScreen(),
+                    ),
+                  );
                 }),
                 const Spacer(),
                 _buildMenuItem(Icons.logout, "Logout", () {
