@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:pick_my_dish/Models/recipe_model.dart';
 import 'package:pick_my_dish/Providers/recipe_provider.dart';
 import 'package:pick_my_dish/Providers/user_provider.dart';
+import 'package:pick_my_dish/Screens/about_us_screen.dart';
 import 'package:pick_my_dish/Screens/login_screen.dart';
 import 'package:pick_my_dish/Screens/recipe_detail_screen.dart';
 import 'package:pick_my_dish/Screens/recipe_upload_screen.dart';
 import 'package:pick_my_dish/Services/api_service.dart';
 import 'package:pick_my_dish/constants.dart';
-import 'package:pick_my_dish/services/database_service.dart';
+import 'package:pick_my_dish/Services/database_service.dart';
 import 'package:pick_my_dish/Screens/favorite_screen.dart';
 import 'package:pick_my_dish/Screens/profile_screen.dart';
 import 'package:pick_my_dish/Screens/recipe_screen.dart';
@@ -589,6 +590,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _loadingTodayRecipes ? null : _loadTodayRecipes,
+        backgroundColor: Colors.orange,
+        child: Icon(Icons.refresh),
+      ),
     );
   }
 
@@ -921,8 +927,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }),
                 const SizedBox(height: 20),
-                _buildMenuItem(Icons.help, "Help", () {
+                _buildMenuItem(Icons.help, "About Us", () {
                   Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AboutUsScreen(),
+                    ),
+                  );
                 }),
                 const Spacer(),
                 _buildMenuItem(Icons.logout, "Logout", () {
