@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PickMyDish - Your Recipe Companion</title>
+    <title>PickMyDish - Your Ultimate Recipe Companion</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
@@ -13,11 +17,13 @@
             <nav class="navbar">
                 <a href="#" class="logo">
                     <img src="images/logo.png" alt="PickMyDish" class="logo-image">
+                    <span>PickMyDish</span>
                 </a>
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>
+                    <li><a href="#screenshots">Screenshots</a></li>
+                    <li><a href="#developers">Developers</a></li>
                     <li><a href="#download">Download</a></li>
-                    <li><a href="#status">Build Status</a></li>
                 </ul>
             </nav>
         </div>
@@ -26,34 +32,143 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Discover Amazing Recipes</h1>
-            <p>Your personal recipe companion that helps you find, save, and cook delicious meals</p>
-            <a href="#download" class="btn">Download Now</a>
+            <div class="hero-content fade-in">
+                <h1>Transform Your Cooking Experience</h1>
+                <p>Your personal AI-powered recipe companion that helps you discover, save, and cook amazing meals tailored to your mood and ingredients</p>
+                <div>
+                    <a href="#download" class="btn">
+                        <i class="fas fa-download"></i> Download Now
+                    </a>
+                    <a href="#features" class="btn btn-secondary">
+                        <i class="fas fa-play-circle"></i> See Features
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Features Section -->
     <section id="features" class="features">
         <div class="container">
-            <div class="section-title">
-                <h2>Amazing Features</h2>
-                <p>Everything you need to become a master chef</p>
+            <div class="section-title fade-in">
+                <h2>Why Choose PickMyDish?</h2>
+                <p>Designed with passion to make cooking enjoyable for everyone</p>
             </div>
             <div class="features-grid">
-                <div class="feature-card">
+                <div class="feature-card fade-in delay-1">
                     <div class="feature-icon">🍳</div>
-                    <h3>Recipe Discovery</h3>
-                    <p>Browse thousands of recipes from various cuisines and find your next favorite dish based on the ingredients you have on hand, your time and mood</p>
+                    <h3>Smart Recipe Discovery</h3>
+                    <p>Find perfect recipes based on available ingredients, cooking time, and your current mood. Our Algorithm suggests personalized recommendations.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card fade-in delay-2">
                     <div class="feature-icon">❤️</div>
-                    <h3>Favorites</h3>
-                    <p>Save your favorite recipes and access them anytime, even offline</p>
+                    <h3>Personal Collections</h3>
+                    <p>Save your favorite recipes, create custom collections, and access them anytime, anywhere.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>User-Friendly</h3>
-                    <p>Beautiful and intuitive interface designed for the best user experience</p>
+                <div class="feature-card fade-in delay-3">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Mood-Based Cooking</h3>
+                    <p>Feeling adventurous or need comfort food? Get recipe suggestions that match your emotional state perfectly.</p>
+                </div>
+                <div class="feature-card fade-in delay-1">
+                    <div class="feature-icon">📊</div>
+                    <h3>Nutrition Insights</h3>
+                    <p>Track calories and dietary information to maintain a healthy lifestyle while enjoying delicious meals.</p>
+                </div>
+                <div class="feature-card fade-in delay-2">
+                    <div class="feature-icon">👨‍🍳</div>
+                    <h3>Step-by-Step Guidance</h3>
+                    <p>Detailed instructions with timer integration, ingredient checklists, and pro tips.</p>
+                </div>
+                <div class="feature-card fade-in delay-3">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Global Cuisines</h3>
+                    <p>Explore thousands of recipes from Italian pasta to Japanese sushi, all with authentic preparation methods.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section id="screenshots" class="screenshots">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>App Experience</h2>
+                <p>Beautiful, intuitive interface designed for the best user experience</p>
+                </div>
+                <div class="screenshots-container">
+                    <div class="screenshot-card">
+                        <img src="images/login.jpg" alt="Login Screen">
+                        <div class="screenshot-overlay">
+                            <h4>Login Screen</h4>
+                            <p>Secure and easy access to your account</p>
+                        </div>
+                    </div>
+                <div class="screenshot-card">
+                    <img src="images/all recipes.jpg" alt="Recipe Discovery Screen">
+                    <div class="screenshot-overlay">
+                        <h4>Smart Recipe Discovery</h4>
+                        <p>Browse by ingredients, time, or mood</p>
+                    </div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="images/recipe detail.jpg" alt="Recipe Detail Screen">
+                    <div class="screenshot-overlay">
+                        <h4>Detailed Recipe View</h4>
+                        <p>Step-by-step instructions with timers</p>
+                    </div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="images/favorite.jpg" alt="Favorites Screen">
+                    <div class="screenshot-overlay">
+                        <h4>Personal Collections</h4>
+                        <p>Save and organize your favorite recipes</p>
+                    </div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="images/profile.jpg" alt="Profile Screen">
+                    <div class="screenshot-overlay">
+                        <h4>User Profile</h4>
+                        <p>Track your cooking journey and achievements</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Developers Section -->
+    <section id="developers" class="developers">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Meet Our Team</h2>
+                <p>Passionate developers creating the future of cooking apps</p>
+            </div>
+            <div class="developers-grid">
+                <div class="developer-card fade-in delay-1">
+                    <img src="images/kamdeu.jpg" alt="kamdeu Yamdjeuson" class="developer-image">
+                    <h3>kamdeu Yamdjeuson</h3>
+                    <div class="developer-role">Backend Architect & DevOps</div>
+                    <div class="developer-bio">
+                        Cloud infrastructure expert ensuring 99.9% uptime and seamless data synchronization across all user devices.
+                    </div>
+                    <div class="developer-social">
+                        <a href="https://github.com/Kynmmarshall"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/kamdeu-yamdjeuson-neil-marshall-a70566298/"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="mailto:kynmmarshall@gmail.com"><i class="fab fa-google"></i></a>
+                    </div>
+                </div>
+                <div class="developer-card fade-in delay-2">
+                    <img src="images/tuheu.png" alt="Tuheu Tchoubi" class="developer-image">
+                    <h3>Tuheu Tchoubi</h3>
+                    <div class="developer-role">UI/UX Designer & Frontend Developer</div>
+                    <div class="developer-bio">
+                        Award-winning designer specializing in intuitive interfaces. Creates beautiful experiences that users love to interact with.
+                    </div>
+                    <div class="developer-social">
+                        <a href="https://github.com/TUHEU"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="mailto:nadaljunior999@gmail.com"><i class="fab fa-google"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,37 +177,44 @@
     <!-- Download Section -->
     <section id="download" class="download">
         <div class="container">
-            <div class="download-content">
-                <h2>Get PickMyDish Now</h2>
-                <p>Download the latest version of our app and start your culinary journey</p>
+            <div class="download-content fade-in">
+                <h2>Ready to Cook?</h2>
+                <p>Join thousands of happy home chefs who transformed their cooking experience</p>
                 
-                <div class="build-status">
-                    <h3 style="color: #333; margin-bottom: 1rem;">Latest Build</h3>
-                    <div class="status-item">
-                        <span>APK Version</span>
-                        <span class="status-badge status-success">Ready</span>
-                    </div>
-                    <div class="status-item">
-                        <span>App Bundle</span>
-                        <span class="status-badge status-success">Ready</span>
-                    </div>
-                    <div class="status-item">
-                        <span>Last Updated</span>
-                        <span id="last-updated">Loading...</span>
+                <div class="build-status fade-in delay-1">
+                    <h3>Latest Build Status</h3>
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <span>Android APK</span>
+                            <span class="status-badge status-success">v2.1.0 Ready</span>
+                        </div>
+                        <div class="status-item">
+                            <span>App Bundle</span>
+                            <span class="status-badge status-success">Play Store Ready</span>
+                        </div>
+                        <div class="status-item">
+                            <span>iOS Version</span>
+                            <span class="status-badge status-building">Coming Soon</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Last Updated</span>
+                            <span id="last-updated">Loading...</span>
+                        </div>
                     </div>
                 </div>
 
-                <div style="margin-top: 2rem;">
+                <div class="download-buttons fade-in delay-2">
                     <a href="download/app-release.apk" class="btn" download>
-                        📱 Download APK
+                        <i class="fab fa-android"></i> Download APK (Android)
                     </a>
                     <a href="download/app-release.aab" class="btn btn-secondary" download>
-                        📦 Download App Bundle
+                        <i class="fas fa-box"></i> App Bundle (Play Store)
                     </a>
                 </div>
 
-                <div style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.8;">
-                    <p>APK: Direct installation file | App Bundle: For Google Play Store</p>
+                <div class="download-info fade-in delay-3">
+                    <p><i class="fas fa-info-circle"></i> APK: Direct installation | App Bundle: For Google Play Store submission</p>
+                    <p><i class="fas fa-shield-alt"></i> All downloads are verified and 100% safe</p>
                 </div>
             </div>
         </div>
@@ -101,8 +223,43 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2025 PickMyDish. All rights reserved.</p>
-            <p>Built with ❤️ using Flutter</p>
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">PickMyDish</div>
+                    <p>Revolutionizing home cooking through technology, one recipe at a time.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/Kynmmarshall/Pick-My-Dish"><i class="fab fa-github" style="font-size: 50px;"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#screenshots">Screenshots</a></li>
+                        <li><a href="#download">Download</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#developers">Our Team</a></li>
+                        <li><a href="mailto:kynmmarshall@gmail.com">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Open Source</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 PickMyDish. All rights reserved. Made with ❤️ and lots of ☕</p>
+                <p>Built with Flutter • Powered by nodejs Backend • Deployed with contabo vps</p>
+            </div>
         </div>
     </footer>
 
